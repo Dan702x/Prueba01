@@ -1,38 +1,37 @@
 import React from 'react';
+import { ArrowDownTrayIcon, FunnelIcon } from '@heroicons/react/24/solid'; // Íconos para botones
 
-// Un componente pequeño para las tarjetas de KPI
-function KpiCard({ title, value, bgColor = 'bg-gray-50' }) {
+// Componente para las 4 tarjetas de KPI
+function KpiCard({ title, value, valueColor = 'text-gray-900' }) {
   return (
-    <div className={`p-4 rounded-lg shadow-md ${bgColor} border border-gray-200`}>
+    <div className="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
       <p className="text-sm text-gray-600">{title}</p>
-      <p className="text-3xl font-bold text-gray-900">{value}</p>
+      <p className={`text-3xl font-bold ${valueColor}`}>{value}</p>
+    </div>
+  );
+}
+
+// Componente para la lista de "Certificados Recientes"
+function CertificadoReciente({ nombre, fecha }) {
+  return (
+    <div className="flex justify-between items-center py-2 border-b last:border-b-0">
+      <span className="text-sm font-medium text-gray-700">{nombre}</span>
+      <span className="text-sm text-gray-500">{fecha}</span>
     </div>
   );
 }
 
 export default function Inicio() {
   return (
-    <div className="space-y-6">
+    // --- ¡NUEVO! Contenedor blanco principal con sombra ---
+    <div className="bg-white p-6 rounded-2xl shadow-lg space-y-6">
+      
       <h1 className="text-3xl font-bold text-gray-800">Inicio / Reportes</h1>
 
-      {/* --- SECCIÓN DE FILTROS --- */}
-      <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg flex flex-wrap items-center gap-4">
-        {/* Filtro Empresa */}
-        <div className="flex-1 min-w-[200px]">
-          <label htmlFor="empresa" className="block text-sm font-medium text-gray-700 mb-1">
-            Empresa
-          </label>
-          <select
-            id="empresa"
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm"
-          >
-            <option>Innovatech Solutions</option>
-            <option>Otra Empresa</option>
-          </select>
-        </div>
-
+      {/* --- SECCIÓN DE FILTROS (Sin "Empresa") --- */}
+      <div className="flex flex-wrap items-end gap-4">
         {/* Filtro Fecha Desde */}
-        <div className="flex-1 min-w-[150px]">
+        <div>
           <label htmlFor="fecha-desde" className="block text-sm font-medium text-gray-700 mb-1">
             Fecha desde:
           </label>
@@ -45,7 +44,7 @@ export default function Inicio() {
         </div>
 
         {/* Filtro Fecha Hasta */}
-        <div className="flex-1 min-w-[150px]">
+        <div>
           <label htmlFor="fecha-hasta" className="block text-sm font-medium text-gray-700 mb-1">
             Fecha hasta:
           </label>
@@ -57,91 +56,77 @@ export default function Inicio() {
           />
         </div>
 
-        {/* Botones */}
-        <div className="flex items-end gap-2 pt-5">
-          <button className="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 shadow-sm">
-            Filtrar
-          </button>
-          <button className="bg-white text-gray-700 px-5 py-2 rounded-md border border-gray-300 hover:bg-gray-50 shadow-sm">
-            Exportar
-          </button>
-        </div>
+        {/* Botón Filtrar */}
+        <button className="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 shadow-sm flex items-center gap-2">
+          <FunnelIcon className="w-5 h-5" />
+          Filtrar
+        </button>
+        
+        {/* Botón Exportar (nuevo estilo) */}
+        <button className="bg-gray-100 text-gray-700 px-5 py-2 rounded-md border border-gray-300 hover:bg-gray-200 shadow-sm flex items-center gap-2 ml-auto">
+          <ArrowDownTrayIcon className="w-5 h-5" />
+          Exportar
+        </button>
       </div>
 
-      {/* --- SECCIÓN DE KPIs (5 TARJETAS) --- */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <KpiCard title="Total Empresas Activas" value="2" />
+      {/* --- SECCIÓN DE KPIs (4 TARJETAS) --- */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard title="Total Certificados Emitidos" value="1,250" />
-        <KpiCard title="Certificados Válidos" value="1,235" />
-        <KpiCard title="Certificados Anulados" value="15" bgColor="bg-red-50" />
+        <KpiCard title="Certificados Válidos" value="1,235" valueColor="text-green-500" />
+        <KpiCard title="Certificados Anulados" value="15" valueColor="text-red-500" />
         <KpiCard title="Practicantes Activos" value="45" />
       </div>
 
-      {/* --- SECCIÓN DE GRÁFICOS (en 2 columnas) --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Columna Izquierda (Gráficos principales) */}
-        <div className="lg:col-span-2 space-y-6">
-          
-          {/* Gráfico de Barras Emisiones */}
-          <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-md min-h-[300px]">
-            <h2 className="font-semibold text-gray-800 mb-2">Emisiones en el Periodo Seleccionado</h2>
-            <div className="flex items-center justify-center h-full text-gray-500">
-              [ Gráfico de Barras: Emisiones por Mes ]
-            </div>
+      {/* --- SECCIÓN DE GRÁFICOS  --- */}
+      <div>
+        {/* 1. Emisiones en el Periodo (Full-width) */}
+        <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm min-h-[300px] mb-6">
+          <h2 className="font-semibold text-gray-800 mb-2">Emisiones en el Periodo Seleccionado</h2>
+          <div className="flex items-center justify-center h-full text-gray-500">
+            [ Gráfico de Barras: Emisiones por Mes ]
           </div>
+        </div>
 
-          {/* Gráfico Top 5 Empresas */}
-          <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-md">
-            <h2 className="font-semibold text-gray-800 mb-4">Top 5 Empresas con más Emisiones</h2>
+        {/* 2. Dos columnas (Top 5 y Recientes) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          {/* Columna Izquierda: Top 5 Áreas */}
+          <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm">
+            <h2 className="font-semibold text-gray-800 mb-4">Top 5 Áreas con más Emisiones</h2>
             <div className="space-y-4">
-              {/* Ejemplo de una barra */}
+              {/* Ejemplo de barra */}
               <div>
-                <span className="text-sm font-medium text-blue-700">Rapid empresa S.A.C</span>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="font-medium text-blue-700">Desarrollo de Software</span>
+                  <span>20</span>
+                </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '80%' }}></div>
                 </div>
               </div>
-              {/* Ejemplo de otra barra */}
+              {/* Ejemplo de barra 2 */}
               <div>
-                <span className="text-sm font-medium text-blue-700">Innovatech Solutions</span>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="font-medium text-blue-700">Soporte de TI</span>
+                  <span>15</span>
+                </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '56%' }}></div>
+                  <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '60%' }}></div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Columna Derecha (Gráfico de Torta y Actividad) */}
-        <div className="lg:col-span-1 space-y-6">
-          
-          {/* Gráfico Distribución por Estado */}
-          <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-md">
-            <h2 className="font-semibold text-gray-800 mb-2">Distribución por Estado</h2>
-            <div className="flex items-center justify-center min-h-[200px] text-gray-500">
-              [ Placeholder para Gráfico de Torta (Donut) ]
-            </div>
-            <div className="flex justify-center gap-4 text-sm">
-                <span className="flex items-center"><span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>Válidos (100%)</span>
-                <span className="flex items-center"><span className="w-3 h-3 bg-red-500 rounded-full mr-2"></span>Anulados (0%)</span>
+          {/* Columna Derecha: Certificados Recientes */}
+          <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm">
+            <h2 className="font-semibold text-gray-800 mb-4">Certificados Recientes</h2>
+            <div className="space-y-2">
+              <CertificadoReciente nombre="Carlos López" fecha="01/10/25" />
+              <CertificadoReciente nombre="Carlos López" fecha="30/09/25" />
+              <CertificadoReciente nombre="Carlos López" fecha="28/09/25" />
             </div>
           </div>
 
-          {/* Actividad Reciente */}
-          <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-md">
-            <h2 className="font-semibold text-gray-800 mb-4">Actividad Reciente del Sistema</h2>
-            <ul className="space-y-3">
-              <li className="text-sm">
-                <p className="font-medium text-gray-900">Nueva empresa registrada: Innovatech Solutions</p>
-                <p className="text-gray-500">Hace 3 horas</p>
-              </li>
-              <li className="text-sm">
-                <p className="font-medium text-gray-900">Se emitieron 50 certificados para Innovatech Solutions</p>
-                <p className="text-gray-500">Hace 4 horas</p>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>

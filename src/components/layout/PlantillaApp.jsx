@@ -3,56 +3,71 @@ import { Outlet } from 'react-router-dom';
 import BarraLateral from '../BarraLateral'; 
 import BarraSuperior from '../BarraSuperior';
 
-export default function PlantillaApp({ role = 'superadmin' }) { // <-- Cambiado el rol
+// --- IMPORTAMOS LOS ÍCONOS ---
+import {
+  HomeIcon,
+  UsersIcon,
+  RectangleStackIcon,
+  UserCircleIcon,
+  AcademicCapIcon,
+  DocumentTextIcon,
+  ClipboardDocumentListIcon,
+  DocumentArrowUpIcon,
+  ShieldCheckIcon
+} from '@heroicons/react/24/solid';
+
+const iconClass = "w-6 h-6"; // Clase común para los íconos
+
+export default function PlantillaApp({ role = 'admin-empresa' }) { 
   
   const sidebarItems = useMemo(() => {
     
-    // --- ¡NUEVOS ITEMS PARA SUPER ADMIN! ---
-    if (role === 'superadmin') {
+    // --- Roles Con LINKS ---
+    if (role === 'admin-empresa') {
       return [
-        { label: 'Inicio / Reportes', to: '/dashboard' },
-        { label: 'Mnt. Usuarios', to: '/usuarios' },
-        { label: 'Mnt. Plantillas', to: '/plantillas' },
-        { label: 'Auditoría', to: '/auditoria' },
-        { label: 'Mnt. Empresas', to: '/empresas' },
-        { label: 'Sol. Accesos', to: '/solicitudes' },
+        { label: 'Inicio / Reportes', to: '/dashboard', icon: <HomeIcon className={iconClass} /> },
+        { label: 'Crtl. Usuarios', to: '/usuarios', icon: <UsersIcon className={iconClass} /> },
+        { label: 'Crtl. Áreas / Proyectos', to: '/areas', icon: <RectangleStackIcon className={iconClass} /> },
+        { label: 'Crtl. Supervisores', to: '/supervisores', icon: <UserCircleIcon className={iconClass} /> },
+        { label: 'Crtl. Practicantes', to: '/practicantes', icon: <AcademicCapIcon className={iconClass} /> },
+        { label: 'Crtl. Certificados', to: '/certificados', icon: <DocumentTextIcon className={iconClass} /> },
+        { label: 'Supervisión Plantillas', to: '/plantillas', icon: <ClipboardDocumentListIcon className={iconClass} /> },
+        { label: 'Emis. Certificados', to: '/emitir', icon: <DocumentArrowUpIcon className={iconClass} /> },
+        { label: 'Auditoría', to: '/auditoria', icon: <ShieldCheckIcon className={iconClass} /> },
       ];
     }
-    
-    if (role === 'admin') {
-      // (Los items de admin que tenías antes)
+
+    if (role === 'superadmin') {
+      //item de superadmin
       return [
-        { label: 'Inicio / Reportes', to: '/dashboard' },
-        { label: 'Mnt. Practicantes', to: '/practicantes' },
-        { label: 'Mnt. Certificados', to: '/certificados' },
-        { label: 'Mnt. Plantillas', to: '/plantillas' },
-        { label: 'Emis. Certificados', to: '/emitir' },
+        { label: 'Inicio / Reportes', to: '/dashboard', icon: <HomeIcon className={iconClass} /> },
+        // ... (puedes añadir íconos a los demás aquí también)
       ];
     }
     
     return [];
   }, [role]);
   
-  // --- PASAMOS EL NOMBRE Y ROL CORRECTOS A LA BARRA SUPERIOR ---
   const userInfo = {
-    'superadmin': { nombre: 'Lowren Recro', rol: 'Super Admin' },
-    'admin': { nombre: 'Lowren Recru', rol: 'Emisor' },
+    'superadmin': { nombre: 'Roy Silva', rol: 'Super Admin' },
+    'admin-empresa': { nombre: 'Roy Silva', rol: 'Admin Empresa' }, 
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    // --- Fondo ---
+    <div className="flex h-screen bg-gray-100"> 
       
       <BarraLateral items={sidebarItems} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         
         <BarraSuperior 
-          // --- ¡CAMBIO AQUÍ! ---
           userDisplayName={`${userInfo[role]?.nombre || 'Usuario'} · ${userInfo[role]?.rol || 'Rol'}`} 
           companyName="Hackthonperu S.A.C" 
         />
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-white p-6">
+        {/* Colores */}
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
           <Outlet />
         </main>
       </div>

@@ -1,13 +1,16 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom'; // Para los enlaces de navegación
+import { NavLink } from 'react-router-dom';
+import { QuestionMarkCircleIcon } from '@heroicons/react/24/solid'; // Importamos el ícono
 
 export default function BarraLateral({ items = [] }) {
   return (
     <aside className="w-64 bg-[#202E5C] text-white p-4 min-h-screen flex flex-col shadow-lg">
-      {/* Logo */}
-      <div className="flex items-center justify-center h-16 border-b border-[#304070] mb-6">
-        <img src="/vite.svg" alt="CERTIFY Logo" className="h-8 mr-2" />
-        <span className="text-xl font-bold">CERTIFY</span>
+      
+      {/* --- Logo con Borde --- */}
+      <div className="flex items-center justify-center h-16 mb-6">
+        <div className="border-2 border-white rounded-lg px-6 py-2">
+          <span className="text-3xl font-bold">CERTIFY</span>
+        </div>
       </div>
 
       {/* MENÚ PRINCIPAL */}
@@ -23,6 +26,8 @@ export default function BarraLateral({ items = [] }) {
                   ${isActive ? 'bg-[#3A476F] text-white shadow-md' : 'hover:bg-[#304070] text-gray-200'}`
                 }
               >
+                {/* Renderizamos el ícono */}
+                {item.icon}
                 <span className="ml-3">{item.label}</span>
               </NavLink>
             </li>
@@ -39,6 +44,7 @@ export default function BarraLateral({ items = [] }) {
             ${isActive ? 'bg-[#3A476F] text-white shadow-md' : 'hover:bg-[#304070] text-gray-200'}`
           }
         >
+          <QuestionMarkCircleIcon className="w-6 h-6" />
           <span className="ml-3">Centro de ayuda</span>
         </NavLink>
       </div>
