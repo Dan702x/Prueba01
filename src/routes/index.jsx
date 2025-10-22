@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import PlantillaApp from '../components/layout/PlantillaApp'
 import Login from '../pages/auth/Login'
+import Forgot from '../pages/auth/Forgot.jsx'
+import Reset from '../pages/auth/Reset.jsx'
 import Inicio from '../pages/Inicio' 
 import ListaPlantillas from '../pages/plantillas/ListaPlantillas'
 import EditorPlantilla from '../pages/plantillas/EditorPlantilla.jsx'
@@ -10,6 +12,8 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/Forgot" element={<Forgot />} />
+      <Route path="/Reset" element={<Reset />} />
 
       {/* ---Roles--- */}
       <Route element={<PlantillaApp role="admin-empresa" />}>
