@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Outlet } from 'react-router-dom';
 import BarraLateral from '../BarraLateral'; 
 import BarraSuperior from '../BarraSuperior';
 
-// --- IMPORTAMOS LOS ÍCONOS ---
 import {
   HomeIcon,
   UsersIcon,
@@ -16,13 +15,18 @@ import {
   ShieldCheckIcon
 } from '@heroicons/react/24/solid';
 
-const iconClass = "w-6 h-6"; // Clase común para los íconos
+const iconClass = "w-6 h-6";
 
 export default function PlantillaApp({ role = 'admin-empresa' }) { 
   
+  const [isSidebarOpen, setSidebarOpen] = useState(true); 
+
+  const toggleSidebar = () => {
+    setSidebarOpen(prevState => !prevState);
+  };
+
   const sidebarItems = useMemo(() => {
     
-    // --- Roles Con LINKS ---
     if (role === 'admin-empresa') {
       return [
         { label: 'Inicio / Reportes', to: '/dashboard', icon: <HomeIcon className={iconClass} /> },
@@ -34,14 +38,7 @@ export default function PlantillaApp({ role = 'admin-empresa' }) {
         { label: 'Supervisión Plantillas', to: '/plantillas', icon: <ClipboardDocumentListIcon className={iconClass} /> },
         { label: 'Emis. Certificados', to: '/emitir', icon: <DocumentArrowUpIcon className={iconClass} /> },
         { label: 'Auditoría', to: '/auditoria', icon: <ShieldCheckIcon className={iconClass} /> },
-      ];
-    }
-
-    if (role === 'superadmin') {
-      //item de superadmin
-      return [
-        { label: 'Inicio / Reportes', to: '/dashboard', icon: <HomeIcon className={iconClass} /> },
-        // ... (puedes añadir íconos a los demás aquí también)
+        { label: 'Gestión de Eventos', to: '/eventos', icon: <ShieldCheckIcon className={iconClass} /> },
       ];
     }
     
@@ -54,19 +51,18 @@ export default function PlantillaApp({ role = 'admin-empresa' }) {
   };
 
   return (
-    // --- Fondo ---
     <div className="flex h-screen bg-gray-100"> 
       
-      <BarraLateral items={sidebarItems} />
+      <BarraLateral items={sidebarItems} isOpen={isSidebarOpen} />
 
       <div className="flex-1 flex flex-col overflow-hidden">
         
         <BarraSuperior 
           userDisplayName={`${userInfo[role]?.nombre || 'Usuario'} · ${userInfo[role]?.rol || 'Rol'}`} 
           companyName="Hackthonperu S.A.C" 
+          toggleSidebar={toggleSidebar}
         />
 
-        {/* Colores */}
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
           <Outlet />
         </main>

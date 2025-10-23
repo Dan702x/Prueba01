@@ -35,6 +35,7 @@ export default function AppRouter() {
         
         <Route path="/emitir" element={<div>Página de Emis. Certificados</div>} />
         <Route path="/auditoria" element={<div>Página de Auditoría</div>} />
+        <Route path="/eventos" element={<div>Página de Gestión de Eventos</div>} />
         <Route path="/help" element={<div>Página de Ayuda</div>} />
       </Route>
 
