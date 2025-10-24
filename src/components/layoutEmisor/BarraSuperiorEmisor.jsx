@@ -1,26 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
-// 1. IMPORTAMOS useNavigate
-import { Link, useNavigate } from "react-router-dom";
+// 1. IMPORTAMOS useNavigate para la redirección
+import { Link, useNavigate } from "react-router-dom"; 
 import {
   ChevronDownIcon,
   BellIcon,
   Bars3Icon,
-  ChevronRightIcon // Para el submenú
+  ChevronRightIcon // Para indicar el submenú
 } from "@heroicons/react/24/solid";
 import {
   Cog6ToothIcon,
-  ArrowPathIcon, 
+  ArrowPathIcon, // Lo mantenemos por si lo necesitas
   ArrowLeftOnRectangleIcon,
-  UserCircleIcon,      // Para el submenú
+  UserCircleIcon, // Para el submenú
   BuildingOfficeIcon, // Para el submenú
-  PaperAirplaneIcon   // Para el submenú
+  PaperAirplaneIcon // Para el submenú (manteniendo el ícono de Emisor)
 } from "@heroicons/react/24/outline";
 
-// Nombre del componente ya es correcto: BarraSuperiorSuper
-export default function BarraSuperiorSuper({
+export default function BarraSuperiorEmisor({
   userDisplayName,
   logoSrc,
-  onToggleSidebar,
+  onToggleSidebar, 
 }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   // 2. NUEVO ESTADO para controlar el submenú de roles
@@ -66,7 +65,7 @@ export default function BarraSuperiorSuper({
       <div className="flex items-center h-full">
         <button
           onClick={onToggleSidebar}
-          className="text-gray-500 hover:text-gray-800 h-full px-4 md:hidden"
+          className="text-gray-500 hover:text-gray-800 h-full px-4 md:hidden" 
         >
           <Bars3Icon className="w-6 h-6" />
         </button>
@@ -92,6 +91,7 @@ export default function BarraSuperiorSuper({
         <div className="relative"> {/* Contenedor relativo para el menú */}
           <button
             ref={botonPerfilRef}
+            // Al hacer clic, abre/cierra el menú principal y SIEMPRE cierra el submenú
             onClick={() => {
               setMenuAbierto(!menuAbierto);
               setSubmenuAbierto(false); 
@@ -176,6 +176,7 @@ export default function BarraSuperiorSuper({
                     onClick={() => {
                         console.log("Cerrando sesión...");
                         setMenuAbierto(false);
+                        // Aquí iría la lógica real de logout, probablemente usando useNavigate a /login
                         // navigate('/login'); 
                     }}
                     className="flex items-center p-3 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100 w-full text-left"

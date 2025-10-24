@@ -14,7 +14,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Iniciando sesión con:', { email, password });
-    navigate('/dashboard');
+    navigate('/super/dashboard');
   };
 
   return (

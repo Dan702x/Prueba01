@@ -16,8 +16,8 @@ import {
   PaperAirplaneIcon   // Para el submenú
 } from "@heroicons/react/24/outline";
 
-// Nombre del componente ya es correcto: BarraSuperiorSuper
-export default function BarraSuperiorSuper({
+// Nombre del componente ya es correcto: BarraSuperiorAdmin
+export default function BarraSuperiorAdmin({
   userDisplayName,
   logoSrc,
   onToggleSidebar,

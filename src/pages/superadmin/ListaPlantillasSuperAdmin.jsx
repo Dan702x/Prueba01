@@ -8,9 +8,11 @@ const mockPlantillas = [
 ];
 
 function PlantillaCard({ id, nombre }) {
-  const editPath = `/superadmin/plantillas/editar/${id}`;
+  // --- ¡¡¡CORRECCIÓN AQUÍ!!! ---
+  const editPath = `/super/plantillas/editar/${id}`; // Cambiado a /super/
 
   return (
+    // El Link principal de la tarjeta ahora usa la ruta corregida
     <Link
       to={editPath}
       className="block border border-gray-200 rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-200 bg-white"
@@ -20,9 +22,10 @@ function PlantillaCard({ id, nombre }) {
       </div>
       <span className="font-semibold text-gray-700">{nombre}</span>
       <div className="flex justify-center gap-2 mt-4 pt-4 border-t border-gray-200">
+        {/* El Link del botón "Editar" también usa la ruta corregida */}
         <Link
           to={editPath}
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()} // Evita que el clic en el botón active el link de la tarjeta entera
           className="bg-white text-gray-700 px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-100 text-sm flex items-center gap-1 z-10 relative"
         >
           <PencilIcon className="w-4 h-4" />
@@ -47,8 +50,9 @@ export default function ListaPlantillasSuperAdmin() {
 
       <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
         <h1 className="text-2xl font-bold text-gray-800">Gestión de Plantillas (Super Admin)</h1>
+        {/* --- ¡¡¡CORRECCIÓN AQUÍ!!! --- */}
         <Link
-          to="/superadmin/plantillas/crear"
+          to="/super/plantillas/crear" // Cambiado a /super/
           className="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 shadow-sm flex items-center gap-2"
         >
           <PlusIcon className="w-5 h-5" />

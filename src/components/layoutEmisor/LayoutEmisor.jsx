@@ -1,50 +1,51 @@
 import React, { useState } from 'react'; 
 import { Outlet } from 'react-router-dom';
-import BarraSuperiorSuper from './BarraSuperiorSuper'; 
-import BarraLateralSuper from './BarraLateralSuper';   
+import BarraSuperiorEmisor from './BarraSuperiorEmisor'; 
+import BarraLateralEmisor from './BarraLateralEmisor';   
 import logoCertify from '../../assets/logo.png'; 
 import {
-  HomeIcon, UsersIcon, RectangleStackIcon, 
-  ShieldCheckIcon, BuildingOfficeIcon, IdentificationIcon, 
-  QuestionMarkCircleIcon 
+  HomeIcon, 
+  AcademicCapIcon, 
+  DocumentTextIcon, 
+  CalendarDaysIcon,
+  QuestionMarkCircleIcon,
+  DocumentArrowUpIcon,
+  IdentificationIcon
 } from '@heroicons/react/24/solid';
 
 const iconClass = "w-6 h-6";
 
-export default function LayoutSuperAdmin() { 
-
+export default function LayoutEmisor() { 
+  
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
-  // --- ¡¡¡CORRECCIONES EN LAS RUTAS 'to:'!!! ---
   const sidebarItems = [
-    { label: 'Inicio / Reportes', to: '/super/dashboard', icon: <HomeIcon className={iconClass} /> },
-    { label: 'Ctrl. Usuarios', to: '/super/usuarios', icon: <UsersIcon className={iconClass} /> },
-    { label: 'Ctrl. Plantillas', to: '/super/plantillas', icon: <RectangleStackIcon className={iconClass} /> },
-    { label: 'Auditoría', to: '/super/auditoria', icon: <ShieldCheckIcon className={iconClass} /> },
-    { label: 'Ctrl. Empresas', to: '/super/empresas', icon: <BuildingOfficeIcon className={iconClass} /> },
-    { label: 'Sol. Accesos', to: '/super/accesos', icon: <IdentificationIcon className={iconClass} /> },
+    { label: 'Inicio', to: '/emisor/dashboard', icon: <HomeIcon className={iconClass} /> },
+    { label: 'Mnt. Practicantes', to: '/emisor/practicantes', icon: <AcademicCapIcon className={iconClass} /> },
+    { label: 'Mnt. Plantillas', to: '/emisor/plantillas', icon: <DocumentTextIcon className={iconClass} /> },
+    { label: 'Emis. Certificados', to: '/emisor/em-certificados', icon: <DocumentArrowUpIcon className={iconClass} /> }, 
+    { label: 'Gestión de Eventos', to: '/emisor/eventos', icon: <IdentificationIcon className={iconClass} /> }, 
   ];
 
-  // --- ¡CORRECCIÓN EN LA RUTA 'to:' DE AYUDA! ---
   const helpItem = {
     label: 'Centro de ayuda',
-    to: '/super/ayuda', 
+    to: '/emisor/ayuda',
     icon: <QuestionMarkCircleIcon className={iconClass} />
   };
 
   const userInfo = {
     nombre: 'Roy Silva', 
-    rol: 'Super Admin'
+    rol: 'Emisor'
   };
 
   return (
     <div className="flex h-screen bg-gray-100 relative"> 
       
-      <BarraLateralSuper 
+      <BarraLateralEmisor 
         items={sidebarItems}
         helpItem={helpItem}
         logoSrc={logoCertify}
@@ -61,7 +62,7 @@ export default function LayoutSuperAdmin() {
       )}
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <BarraSuperiorSuper 
+        <BarraSuperiorEmisor 
           userDisplayName={`${userInfo.nombre} · ${userInfo.rol}`} 
           logoSrc={logoCertify} 
           onToggleSidebar={toggleSidebar}
