@@ -23,17 +23,17 @@ export default function LayoutSuperAdmin() {
   };
 
   const sidebarItems = [
-    { label: 'Inicio / Reportes', to: '/super/dashboard', icon: <HomeIcon className={iconClass} /> },
-    { label: 'Ctrl. Usuarios', to: '/super/usuarios', icon: <UsersIcon className={iconClass} /> },
-    { label: 'Ctrl. Plantillas', to: '/super/plantillas', icon: <RectangleStackIcon className={iconClass} /> },
-    { label: 'Auditoría', to: '/super/auditoria', icon: <ShieldCheckIcon className={iconClass} /> },
-    { label: 'Ctrl. Empresas', to: '/super/empresas', icon: <BuildingOfficeIcon className={iconClass} /> },
-    { label: 'Sol. Accesos', to: '/super/accesos', icon: <IdentificationIcon className={iconClass} /> },
+    { label: 'Inicio / Reportes', to: '/superadmin/dashboard', icon: <HomeIcon className={iconClass} /> },
+    { label: 'Ctrl. Usuarios', to: '/superadmin/usuarios', icon: <UsersIcon className={iconClass} /> },
+    { label: 'Ctrl. Plantillas', to: '/superadmin/plantillas', icon: <RectangleStackIcon className={iconClass} /> },
+    { label: 'Auditoría', to: '/superadmin/auditoria', icon: <ShieldCheckIcon className={iconClass} /> },
+    { label: 'Ctrl. Empresas', to: '/superadmin/empresas', icon: <BuildingOfficeIcon className={iconClass} /> },
+    { label: 'Sol. Accesos', to: '/superadmin/accesos', icon: <IdentificationIcon className={iconClass} /> },
   ];
 
   const helpItem = {
     label: 'Centro de ayuda',
-    to: '/super/ayuda',
+    to: '/superadmin/ayuda',
     icon: <QuestionMarkCircleIcon className={iconClass} />
   };
 

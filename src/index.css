@@ -5,3 +5,158 @@
 body {
   min-height: 100vh;
 }
+/* --- ESTILOS PERSONALIZADOS PARA EL EDITOR DE PLANTILLAS --- */
+
+.label-estilo {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.input-estilo {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.radio-estilo {
+  /* Puedes añadir estilos de Tailwind aquí si lo prefieres */
+}
+
+.file-input-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  background-color: white;
+  color: #374151;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  font-size: 0.875rem;
+}
+.file-input-label:hover {
+  background-color: #f9fafb;
+}
+
+.tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 2px solid transparent;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.tab-button:hover {
+  color: #374151;
+}
+.tab-button.active {
+  border-bottom-color: #2563eb;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Estilos Preview Container A4 simulado */
+.preview-container {
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background-color: white;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.preview-container.vertical {
+  width: 210mm;
+  height: 297mm;
+}
+.preview-container.horizontal {
+  width: 297mm;
+  height: 210mm;
+}
+.preview-container .prose {
+  padding: 20mm;
+  font-size: 11pt;
+  line-height: 1.5;
+}
+
+.variable-highlight {
+  background-color: #fef9c3;
+  padding: 0.1rem 0.2rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* Estilos de Firma */
+.firma-preview {
+  position: absolute;
+  bottom: 15mm;
+  right: 15mm;
+  max-height: 30mm;
+  max-width: 50mm;
+  object-fit: contain;
+}
+.firma-preview-2 {
+  position: absolute;
+  bottom: 15mm;
+  left: 15mm;
+  max-height: 30mm;
+  max-width: 50mm;
+  object-fit: contain;
+}
+
+.variable-button {
+  background-color: #e0f2fe;
+  color: #0c4a6e;
+  font-size: 0.75rem;
+  font-family: monospace;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid #bae6fd;
+}
+.variable-button:hover {
+  background-color: #bfdbfe;
+}
+
+/* Quill Styles */
+.ql-container.ql-snow {
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+.ql-toolbar.ql-snow {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+  border-bottom: 0px;
+}
+.ql-editor {
+  min-height: 300px;
+  font-size: 1rem;
+}
+
+.download-button {
+  background-color: #16a34a;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.download-button:hover {
+  background-color: #15803d;
+}
