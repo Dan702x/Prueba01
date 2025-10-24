@@ -14,6 +14,7 @@ import Reset from "../pages/auth/Reset.jsx";
 import DashboardSuper from "../pages/superadmin/DashboardSuper";
 import ListaPlantillasSuperAdmin from "../pages/superadmin/ListaPlantillasSuperAdmin";
 import EditorPlantillaSuperAdmin from "../pages/superadmin/EditorPlantillaSuperAdmin";
+import SolicitudesAcceso from "../pages/superadmin/SolicitudesAcceso";
 
 // Páginas Admin Empresa
 import DashboardAdmin from "../pages/admin/DashboardAdmin";
@@ -74,7 +75,7 @@ export default function AppRouter() {
         />
         <Route
           path="/super/accesos"
-          element={<div>Página de Solicitudes de Acceso</div>}
+          element={<SolicitudesAcceso />}
         />
         <Route
           path="/super/ayuda"
