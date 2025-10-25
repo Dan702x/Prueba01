@@ -8,6 +8,7 @@ import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/soli
  * - onClose: (function) Función para cerrar el modal.
  * - onConfirm: (function) Función que se ejecuta al confirmar.
  */
+
 export default function ModalConfirmacion({ modo, onClose, onConfirm }) {
   
   const esModoDesactivar = modo === 'desactivar';

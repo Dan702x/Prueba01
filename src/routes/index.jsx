@@ -94,7 +94,7 @@ export default function AppRouter() {
         <Route path="/admin/certificados" element={<div>Página de Mnt. Certificados (Admin)</div>} />
         <Route path="/admin/plantillas" element={<div>Página de Mtr. Plantillas (Admin)</div>} />
         <Route path="/admin/em-certificados" element={<div>Página de Emis. Certificados (Admin)</div>} />
-        <Route path="/admin/auditoria" element={<AuditoriaAdmin />} />
+        <Route path="/admin/auditoria" element={<div>Página de Auditoría (Admin)</div>} />
         <Route path="/admin/eventos" element={<GestionEventos />} />
         <Route path="/admin/ayuda" element={<div>Página de Centro de Ayuda (Admin)</div>} />
       </Route>
