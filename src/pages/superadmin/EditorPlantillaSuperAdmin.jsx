@@ -15,7 +15,7 @@ import 'react-quill/dist/quill.snow.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-// Variables y texto de ejemplo (sin cambios)
+
 const variablesDisponibles = [
   { nombre: 'Nombre Completo', var: '{{nombre_completo}}' },
   { nombre: 'DNI', var: '{{dni}}' },
@@ -80,7 +80,7 @@ export default function EditorPlantillaSuperAdmin() {
   };
 
   const descargarPdf = () => {
-    // ... (función descargarPdf sin cambios) ...
+  
         if (!previewRef.current) {
          alert("Error: No se encontró el elemento de previsualización.");
          return;
@@ -149,7 +149,7 @@ export default function EditorPlantillaSuperAdmin() {
         </div>
       </div>
 
-      {/* --- Resto del componente (Grid, Tabs, Editor, Preview, Variables) sin cambios --- */}
+      
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <div className="lg:col-span-2 space-y-4">
@@ -233,12 +233,12 @@ export default function EditorPlantillaSuperAdmin() {
                  backgroundSize: 'cover',
                  backgroundPosition: 'center',
                  backgroundRepeat: 'no-repeat',
-                 position: 'relative' // Necesario para posicionar firmas
+                 position: 'relative' 
                }}
              >
-               {/* Contenido HTML */}
+
                <div
-                 className="prose max-w-none p-12" // Ajusta padding según necesites 
+                 className="prose max-w-none p-12" 
                  dangerouslySetInnerHTML={{ __html: cuerpoPlantilla.replace(/{{(.*?)}}/g, '<span style="background-color: #fef9c3; padding: 0.1em 0.3em; border-radius: 3px;">{{$1}}</span>') }}
                />
                
@@ -262,7 +262,7 @@ export default function EditorPlantillaSuperAdmin() {
          )}
         </div>
 
-        {/* --- Columna Derecha (Variables) --- */}
+      
         <div className="lg:col-span-1">
          <div className="sticky top-6">
            <div className="bg-gray-50 border border-gray-200 p-4 rounded-lg shadow-sm">
