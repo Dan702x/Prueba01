@@ -1,56 +1,42 @@
 import React from 'react';
-import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
+import { ExclamationTriangleIcon, ArrowPathIcon, TrashIcon } from '@heroicons/react/24/outline';
 
-/**
- * Modal genérico de confirmación.
- * Props:
- * - modo: ('desactivar' | 'activar') Define el color y el texto.
- * - onClose: (function) Función para cerrar el modal.
- * - onConfirm: (function) Función que se ejecuta al confirmar.
- */
+const icons = {
+  danger: <TrashIcon className="h-12 w-12 text-red-500" />,
+  warning: <ExclamationTriangleIcon className="h-12 w-12 text-yellow-500" />,
+  success: <ArrowPathIcon className="h-12 w-12 text-green-500" />,
+};
 
-export default function ModalConfirmacion({ modo, onClose, onConfirm }) {
-  
-  const esModoDesactivar = modo === 'desactivar';
+const buttonStyles = {
+  danger: 'bg-red-600 hover:bg-red-700',
+  warning: 'bg-yellow-500 hover:bg-yellow-600 text-white', // Aseguramos texto blanco para contraste
+  success: 'bg-green-600 hover:bg-green-700',
+};
 
-  // Configuración dinámica basada en el modo
-  const config = {
-    titulo: esModoDesactivar ? '¿Estás seguro?' : '¿Activar Evento?',
-    descripcion: esModoDesactivar 
-      ? 'Estás a punto de desactivar este evento. Los certificados asociados no se verán afectados.'
-      : 'Estás a punto de reactivar este evento.',
-    textoBoton: esModoDesactivar ? 'Sí, desactivar' : 'Sí, activar',
-    icono: esModoDesactivar 
-      ? <ExclamationTriangleIcon className="h-16 w-16 text-red-500" />
-      : <ArrowPathIcon className="h-16 w-16 text-green-500" />,
-    colorBoton: esModoDesactivar 
-      ? 'bg-red-600 hover:bg-red-700' 
-      : 'bg-green-600 hover:bg-green-700'
-  };
-
+export default function ModalConfirmacion({ variant = 'warning', title, message, confirmText, onConfirm, onClose }) {
   return (
-    // Padding y fondo del modal
-    <div className="p-8 bg-white text-center flex flex-col items-center">
-      {config.icono}
+    <div className="p-6 text-center">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+          {icons[variant]}
+      </div>
+      <h3 className="mt-5 text-xl font-semibold text-gray-900">{title}</h3>
+      <p className="mt-2 text-sm text-gray-500">{message}</p>
       
-      <h2 className="text-3xl font-bold text-gray-900 mt-4 mb-2">{config.titulo}</h2>
-      
-      <p className="text-gray-600 mb-8">{config.descripcion}</p>
-      
-      <div className="flex justify-center gap-4 w-full">
+      {/* --- CORRECCIÓN AQUÍ: Botones de tamaño fijo --- */}
+      <div className="mt-6 flex justify-center gap-4">
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300"
+          className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 font-semibold rounded-md hover:bg-gray-300"
         >
           Cancelar
         </button>
         <button
           type="button"
           onClick={onConfirm}
-          className={`flex-1 px-6 py-3 text-white font-semibold rounded-lg ${config.colorBoton}`}
+          className={`flex-1 px-4 py-2 text-white font-semibold rounded-md ${buttonStyles[variant]}`}
         >
-          {config.textoBoton}
+          {confirmText}
         </button>
       </div>
     </div>
