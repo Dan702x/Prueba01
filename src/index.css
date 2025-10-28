@@ -160,3 +160,134 @@ body {
 .download-button:hover {
   background-color: #15803d;
 }
+/* =================================================== */
+/* Estilos para el Formulario de Solicitud de Acceso  */
+/* =================================================== */
+
+/* Contenedor principal para centrar el formulario en la página */
+.form-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa toda la altura de la vista */
+    background-color: #f0f2f5; /* Fondo gris claro */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Estilos para el contenedor del formulario (la "caja" blanca) */
+.form-container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: 100%;
+    max-width: 450px; /* Ancho máximo */
+    text-align: center;
+}
+
+.form-logo {
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+.form-header {
+    margin-bottom: 30px;
+}
+
+.form-title {
+    font-size: 24px;
+    color: #333333;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.form-subtitle {
+    font-size: 15px;
+    color: #666666;
+    margin-top: 0;
+    line-height: 1.5;
+}
+
+/* Grupos de formulario para labels e inputs */
+/* NOTA: Si ya tienes clases ".form-group", ".form-control", ".btn", ".btn-primary" 
+   en tu index.css, puedes omitir duplicarlas.
+   Si no las tienes, o si estas son específicas, añádelas.
+*/
+.form-group {
+    margin-bottom: 20px;
+    text-align: left; /* Alinea los labels a la izquierda */
+}
+
+.form-group label {
+    display: block; /* Cada label en su propia línea */
+    font-size: 14px;
+    color: #555555;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Estilo para todos los campos de input */
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333333;
+    box-sizing: border-box; /* Importante para que el padding no afecte el ancho */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Color azul al enfocar (puedes cambiarlo por tu color primario) */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Estilo para el botón primario */
+.btn {
+    display: inline-block;
+    width: 100%; /* El botón ocupa todo el ancho */
+    padding: 12px 20px;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.5;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: none;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    color: #ffffff;
+    background-color: #007bff; /* Color azul primario */
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Azul más oscuro al pasar el ratón */
+    border-color: #0056b3;
+}
+
+/* Estilos para el pie del formulario (enlace de "Iniciar Sesión") */
+.form-footer {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #777777;
+}
+
+.form-footer a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* =================================================== */
+/* Fin de estilos de Solicitud de Acceso       */
+/* =================================================== */
