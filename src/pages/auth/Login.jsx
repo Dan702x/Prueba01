@@ -11,10 +11,50 @@ export default function Login() {
   
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Iniciando sesión con:', { email, password });
-    navigate('/super/dashboard');
+
+    // Añadimos un estado para mostrar un mensaje de error en la UI
+    // Asegúrate de añadir esta línea al inicio de tu componente:
+    // const [error, setError] = useState('');
+
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          correo: email,
+          contrasena: password
+        })
+      });
+
+      // Si la respuesta del servidor NO es exitosa (ej. 401, 403, 500)
+      if (!response.ok) {
+        // Leemos el mensaje de error que envía el backend si es posible
+        const errorData = await response.json().catch(() => ({})); // Evita error si no hay cuerpo JSON
+        const errorMessage = errorData.message || 'Correo o contraseña incorrectos.';
+        
+        // Mostramos el error al usuario
+        alert(errorMessage); 
+        console.error('Error de autenticación:', response.status, errorMessage);
+        return; // Detenemos la ejecución aquí
+      }
+
+      // Si la respuesta es exitosa
+      const data = await response.json();
+      const token = data.token;
+
+      console.log('¡Login exitoso! Token:', token);
+      localStorage.setItem('jwtToken', token);
+      navigate('/super/dashboard');
+
+    } catch (error) {
+      // Este bloque se ejecuta si hay un error de RED (ej. el backend no está corriendo)
+      console.error('Error de conexión:', error);
+      alert('No se pudo conectar con el servidor. ¿El backend está funcionando?');
+    }
   };
 
   return (
