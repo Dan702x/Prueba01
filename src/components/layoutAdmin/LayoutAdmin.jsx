@@ -31,7 +31,7 @@ export default function LayoutAdmin() {
     { label: 'Ctrl. Plantillas', to: '/admin/plantillas', icon: <RectangleStackIcon className={iconClass} /> }, // Este se queda igual
     { label: 'Emis. Certificados', to: '/admin/em-certificados', icon: <DocumentArrowUpIcon className={iconClass} /> },
     { label: 'Auditoría', to: '/admin/auditoria', icon: <ShieldCheckIcon className={iconClass} /> },
-    { label: 'Gestión de Eventos', to: '/admin/eventos', icon: <IdentificationIcon className={iconClass} /> },
+    { label: 'Ctrl. Eventos/Cursos', to: '/admin/eventos', icon: <IdentificationIcon className={iconClass} /> },
   ];
 
   const helpItem = {

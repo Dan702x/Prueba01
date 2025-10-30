@@ -21,15 +21,15 @@ import CtrlEmpresas from "../pages/superadmin/CtrlEmpresas";
 // Páginas Admin Empresa
 import DashboardAdmin from "../pages/admin/DashboardAdmin";
 import AuditoriaAdmin from "../pages/admin/AuditoriaAdmin";
-import GestionEventos from "../pages/admin/GestionEventos";
+import CtrlEventos from "../pages/admin/CtrlEventos.jsx";
 import ListaPlantillasAdmin from "../pages/admin/ListaPlantillasAdmin";
 import PersonalizadorPlantillaAdmin from "../pages/admin/PersonalizadorPlantillaAdmin";
-import GestionPracticantes from "../pages/admin/GestionPracticantes";
+import CtrlPracticantes from "../pages/admin/CtrlPracticantes.jsx";
 
 // Páginas Emisor
 import DashboardEmisor from "../pages/emisor/DashboardEmisor";
-import GestionEventosEmisor from "../pages/emisor/GestionEventosEmisor";
-import GestionPracticantesEmisor from "../pages/emisor/GestionPracticantesEmisor";
+import CtrlEventosEmisor from "../pages/emisor/CtrlEventosEmisor";
+import CtrlPracticantesEmisor from "../pages/emisor/CtrlPracticantesEmisor.jsx";
 
 export default function AppRouter() {
   
@@ -66,7 +66,7 @@ export default function AppRouter() {
         <Route path="/admin/usuarios" element={<div>Página de Mnt. Usuarios (Admin)</div>} />
         <Route path="/admin/areas" element={<div>Página de Mnt. Áreas (Admin)</div>} />
         <Route path="/admin/supervisores" element={<div>Página de Mnt. Supervisores (Admin)</div>} />
-        <Route path="/admin/practicantes" element={<GestionPracticantes />} />
+        <Route path="/admin/practicantes" element={<CtrlPracticantes />} />
         <Route path="/admin/certificados" element={<div>Página de Mnt. Certificados (Admin)</div>} />
         
         <Route path="/admin/plantillas" element={<ListaPlantillasAdmin />} />
@@ -74,7 +74,7 @@ export default function AppRouter() {
 
         <Route path="/admin/em-certificados" element={<div>Página de Emis. Certificados (Admin)</div>} />
         <Route path="/admin/auditoria" element={<AuditoriaAdmin />} />
-        <Route path="/admin/eventos" element={<GestionEventos />} />
+        <Route path="/admin/eventos" element={<CtrlEventos />} />
         <Route path="/admin/ayuda" element={<div>Página de Centro de Ayuda (Admin)</div>} />
       </Route>
 
@@ -82,10 +82,10 @@ export default function AppRouter() {
       <Route element={<LayoutEmisor />}>
         <Route path="/emisor" element={<Navigate to="/emisor/dashboard" replace />} />
         <Route path="/emisor/dashboard" element={<DashboardEmisor />} /> 
-        <Route path="/emisor/practicantes" element={<GestionPracticantesEmisor />} />
+        <Route path="/emisor/practicantes" element={<CtrlPracticantesEmisor />} />
         <Route path="/emisor/plantillas" element={<div>Página de Mnt. Plantillas (Emisor)</div>} />
         <Route path="/emisor/em-certificados" element={<div>Página de Emisión de Certificados (Emisor)</div>} />
-        <Route path="/emisor/eventos" element={<GestionEventosEmisor />} />
+        <Route path="/emisor/eventos" element={<CtrlEventosEmisor />} />
         <Route path="/emisor/ayuda" element={<div>Página de Centro de Ayuda (Emisor)</div>} />
       </Route>
 

@@ -11,23 +11,22 @@ const StatusBadge = ({ isActive }) => {
   return <span className={`${baseClasses} bg-gray-100 text-gray-800`}>Inactivo</span>;
 };
 
-// --- Helper para convertir fecha DD/MM/YY a un objeto Date comparable ---
 const parseDate = (dateString) => {
     if (!dateString) return null;
     const parts = dateString.split('/');
-    // Asume formato DD/MM/YY y lo convierte a YYYY-MM-DD para el objeto Date
     return new Date(`20${parts[2]}`, parts[1] - 1, parts[0]);
 };
 
-export default function GestionEventosEmisor() {
+export default function CtrlEventosEmisor() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // --- Estados para los filtros ---
   const [estadoFiltro, setEstadoFiltro] = useState('Todos');
   const [fechaInicioFiltro, setFechaInicioFiltro] = useState('');
   const [fechaFinFiltro, setFechaFinFiltro] = useState('');
+  // --- 1. NUEVO ESTADO PARA EL FILTRO DE RESPONSABLE ---
+  const [responsableFiltro, setResponsableFiltro] = useState('Todos');
 
   const [eventos, setEventos] = useState([
     { id: 1, nombre: 'Curso de React Avanzado', responsable: 'Juan Diego', fechaInicio: '01/08/25', fechaFin: '31/10/25', estado: true },
@@ -43,15 +42,23 @@ export default function GestionEventosEmisor() {
     { id: 11, nombre: 'Curso de Marketing Digital', responsable: 'Ana Gómez', fechaInicio: '15/06/26', fechaFin: '30/06/26', estado: true },
   ]);
 
-  // --- Lógica de filtrado actualizada ---
+  // --- 2. OBTENER LISTA ÚNICA DE RESPONSABLES ---
+  const responsablesUnicos = useMemo(() => {
+    const responsables = eventos.map(e => e.responsable);
+    return ['Todos', ...new Set(responsables)];
+  }, [eventos]);
+
   const filteredItems = useMemo(() => {
-    setCurrentPage(1); // Resetea la página con cada cambio de filtro
+    setCurrentPage(1);
     return eventos.filter(evento => {
         const searchMatch = evento.nombre.toLowerCase().includes(searchTerm.toLowerCase());
         
         const estadoMatch = estadoFiltro === 'Todos' ||
             (estadoFiltro === 'Activo' && evento.estado) ||
             (estadoFiltro === 'Inactivo' && !evento.estado);
+
+        // --- 3. AÑADIR LÓGICA DEL NUEVO FILTRO ---
+        const responsableMatch = responsableFiltro === 'Todos' || evento.responsable === responsableFiltro;
 
         const fechaInicioEvento = parseDate(evento.fechaInicio);
         const filtroInicio = fechaInicioFiltro ? new Date(fechaInicioFiltro) : null;
@@ -61,9 +68,9 @@ export default function GestionEventosEmisor() {
         const filtroFin = fechaFinFiltro ? new Date(fechaFinFiltro) : null;
         const dateEndMatch = !filtroFin || fechaFinEvento <= filtroFin;
         
-        return searchMatch && estadoMatch && dateStartMatch && dateEndMatch;
+        return searchMatch && estadoMatch && responsableMatch && dateStartMatch && dateEndMatch;
     });
-  }, [eventos, searchTerm, estadoFiltro, fechaInicioFiltro, fechaFinFiltro]);
+  }, [eventos, searchTerm, estadoFiltro, responsableFiltro, fechaInicioFiltro, fechaFinFiltro]);
 
   const currentItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -77,64 +84,52 @@ export default function GestionEventosEmisor() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-800">Gestión de Eventos y Cursos</h1>
+      <h1 className="text-3xl font-bold text-gray-800">Control de Eventos y Cursos</h1>
 
       <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Filtros</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
+        {/* --- 4. MODIFICAR EL GRID DE FILTROS --- */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
           
-          {/* Campo 1: Nombre del Evento */}
-          <div className="col-span-1 lg:col-span-4">
+          <div className="lg:col-span-1">
             <label htmlFor="search-evento" className="block text-sm font-medium text-gray-700 mb-1">Evento</label>
             <div className="relative">
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                id="search-evento"
-                placeholder="Buscar por nombre o código"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="form-input block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <input type="text" id="search-evento" placeholder="Buscar por nombre..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-input block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
 
-          {/* Campo 2: Estado */}
-          <div className="col-span-1 sm:col-span-1 lg:col-span-3">
+          {/* Filtro de Responsable */}
+          <div className="lg:col-span-1">
+            <label htmlFor="responsable" className="block text-sm font-medium text-gray-700 mb-1">Responsable</label>
+            <select id="responsable" value={responsableFiltro} onChange={(e) => setResponsableFiltro(e.target.value)}
+              className="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 pl-3 pr-10">
+              {responsablesUnicos.map(r => <option key={r}>{r}</option>)}
+            </select>
+          </div>
+
+          {/* Filtro de Estado */}
+          <div className="lg:col-span-1">
             <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-            <select
-              id="estado"
-              value={estadoFiltro}
-              onChange={(e) => setEstadoFiltro(e.target.value)}
-              className="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 pl-3 pr-10"
-            >
+            <select id="estado" value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)}
+              className="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 pl-3 pr-10">
               <option>Todos</option>
               <option>Activo</option>
               <option>Inactivo</option>
             </select>
           </div>
 
-          {/* Campo 3: Rango de fechas */}
-          <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-5">
+          <div className="lg:col-span-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">Rango de Fechas</label>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <input 
-                type="date"
-                value={fechaInicioFiltro}
-                onChange={(e) => setFechaInicioFiltro(e.target.value)} 
+              <input type="date" value={fechaInicioFiltro} onChange={(e) => setFechaInicioFiltro(e.target.value)} 
                 className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
-              <span className="hidden sm:block">-</span>
-              <input 
-                type="date"
-                value={fechaFinFiltro}
-                onChange={(e) => setFechaFinFiltro(e.target.value)} 
+              <input type="date" value={fechaFinFiltro} onChange={(e) => setFechaFinFiltro(e.target.value)} 
                 className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
             </div>
           </div>
-          
-          {/* Botón Filtrar ELIMINADO */}
-
         </div>
       </div>
 

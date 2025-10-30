@@ -29,6 +29,9 @@ export default function GestionEventos() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
+  // --- 1. NUEVO ESTADO PARA EL FILTRO DE RESPONSABLE ---
+  const [responsableFilter, setResponsableFilter] = useState('Todos');
+
   const [eventos, setEventos] = useState([
     { id: 1, nombre: 'Curso de React Avanzado', responsable: 'Juan Diego', fechaInicio: '2025-08-01', fechaFin: '2025-10-31', estado: true },
     { id: 2, nombre: 'Taller de Figma para Devs.', responsable: 'Roy Silva', fechaInicio: '2025-08-01', fechaFin: '2025-10-31', estado: false },
@@ -43,6 +46,12 @@ export default function GestionEventos() {
     { id: 11, nombre: 'Curso de Marketing Digital', responsable: 'Ana Gómez', fechaInicio: '2026-06-15', fechaFin: '2026-06-30', estado: true },
   ]);
 
+  // --- 2. OBTENER LISTA ÚNICA DE RESPONSABLES ---
+  const responsablesUnicos = useMemo(() => {
+    const responsables = eventos.map(e => e.responsable);
+    return ['Todos', ...new Set(responsables)];
+  }, [eventos]);
+
   const filteredItems = useMemo(() => {
     const parseDateUTC = (dateString) => {
         if (!dateString) return null;
@@ -53,6 +62,8 @@ export default function GestionEventos() {
     return eventos.filter(evento => {
       const searchTermMatch = evento.nombre.toLowerCase().includes(searchTerm.toLowerCase());
       const statusMatch = statusFilter === 'Todos' || (statusFilter === 'Activo' && evento.estado) || (statusFilter === 'Inactivo' && !evento.estado);
+      // --- 3. AÑADIR LÓGICA DEL NUEVO FILTRO ---
+      const responsableMatch = responsableFilter === 'Todos' || evento.responsable === responsableFilter;
 
       let dateMatch = true;
       const eventStartDate = parseDateUTC(evento.fechaInicio);
@@ -67,9 +78,9 @@ export default function GestionEventos() {
         dateMatch = false;
       }
 
-      return searchTermMatch && statusMatch && dateMatch;
+      return searchTermMatch && statusMatch && responsableMatch && dateMatch;
     });
-  }, [eventos, searchTerm, statusFilter, startDate, endDate]);
+  }, [eventos, searchTerm, statusFilter, startDate, endDate, responsableFilter]);
   
   const currentItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -124,36 +135,42 @@ export default function GestionEventos() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-800">Gestión de Eventos y Cursos</h1>
+      <h1 className="text-3xl font-bold text-gray-800">Control de Eventos y Cursos</h1>
 
       <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Filtros</h2>
 
+        {/* --- 4. MODIFICAR EL GRID DE FILTROS --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
 
-          <div className="col-span-1 md:col-span-2 lg:col-span-4">
+          <div className="col-span-1 md:col-span-2 lg:col-span-3">
             <label htmlFor="search-evento" className="block text-sm font-medium text-gray-700 mb-1">Evento</label>
             <div className="relative">
               <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input
-                type="text" id="search-evento" placeholder="Buscar por nombre..." value={searchTerm}
-                onChange={handleFilterChange(setSearchTerm)}
-                className="form-input block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <input type="text" id="search-evento" placeholder="Buscar por nombre..." value={searchTerm} onChange={handleFilterChange(setSearchTerm)}
+                className="form-input block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
 
+          {/* Filtro de Responsable */}
           <div className="col-span-1 md:col-span-1 lg:col-span-3">
-            <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-            <select
-              id="status-filter" value={statusFilter} onChange={handleFilterChange(setStatusFilter)}
-              className="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 pl-3 pr-10"
-            >
-              <option>Todos</option><option>Activo</option><option>Inactivo</option>
+            <label htmlFor="responsable-filter" className="block text-sm font-medium text-gray-700 mb-1">Responsable</label>
+            <select id="responsable-filter" value={responsableFilter} onChange={handleFilterChange(setResponsableFilter)}
+              className="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 pl-3 pr-10">
+              {responsablesUnicos.map(r => <option key={r}>{r}</option>)}
             </select>
           </div>
 
-          <div className="col-span-1 md:col-span-2 lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Filtro de Estado */}
+          <div className="col-span-1 md:col-span-1 lg:col-span-2">
+            <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+            <select id="status-filter" value={statusFilter} onChange={handleFilterChange(setStatusFilter)}
+              className="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 pl-3 pr-10">
+              <option>Todos</option><option>Activo</option><option>Inactivo</option>
+            </select>
+          </div>
+          
+          <div className="col-span-1 md:col-span-2 lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
              <div>
                 <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
                 <input type="date" id="start-date" value={startDate} onChange={handleFilterChange(setStartDate)} className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
@@ -177,9 +194,7 @@ export default function GestionEventos() {
         <div className="overflow-x-auto flex-grow">
           <table className="w-full text-sm text-left text-gray-600">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 sticky top-0 z-10">
-              <tr>
-                <th scope="col" className="px-6 py-4">Nombre del Evento</th><th scope="col" className="px-6 py-4">Responsable</th><th scope="col" className="px-6 py-4">Periodo</th><th scope="col" className="px-6 py-4">Estado</th><th scope="col" className="px-6 py-4 text-center">Acciones</th>
-              </tr>
+              <tr><th scope="col" className="px-6 py-4">Nombre del Evento</th><th scope="col" className="px-6 py-4">Responsable</th><th scope="col" className="px-6 py-4">Periodo</th><th scope="col" className="px-6 py-4">Estado</th><th scope="col" className="px-6 py-4 text-center">Acciones</th></tr>
             </thead>
             <tbody>
               {currentItems.length > 0 ? (
@@ -219,7 +234,7 @@ export default function GestionEventos() {
 
       <ModalBase isOpen={modalAbierto === 'crear' || modalAbierto === 'editar'} onClose={handleCloseModal} maxWidth="md:max-w-2xl"><FormularioEvento evento={eventoSeleccionado} onClose={handleCloseModal} onSave={handleSaveEvento} /></ModalBase>
       <ModalBase isOpen={modalAbierto === 'desactivar'} onClose={handleCloseModal} maxWidth="md:max-w-md"><ModalConfirmacion variant="warning" title="¿Desactivar Evento?" message="Estás a punto de desactivar este evento. Los certificados asociados no se verán afectados." confirmText="Sí, desactivar" onConfirm={handleConfirmDesactivar} onClose={handleCloseModal} /></ModalBase>
-      <ModalBase isOpen={modalAbierto === 'activar'} onClose={handleCloseModal} maxWidth="md:max-w-md"><ModalConfirmacion variant="success" title="¿Activar Evento?" message="Estás a punto de reactivar este evento." confirmText="Sí, activar" onConfirm={handleConfirmActivar} onClose /></ModalBase>
+      <ModalBase isOpen={modalAbierto === 'activar'} onClose={handleCloseModal} maxWidth="md:max-w-md"><ModalConfirmacion variant="success" title="¿Activar Evento?" message="Estás a punto de reactivar este evento." confirmText="Sí, activar" onConfirm={handleConfirmActivar} onClose={handleCloseModal} /></ModalBase>
     </div>
   );
 }

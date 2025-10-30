@@ -2,12 +2,10 @@ import React, { useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Bars3Icon } from '@heroicons/react/24/solid';
 
-// Nombre del componente cambiado a BarraLateralEmisor
 export default function BarraLateralEmisor({ items = [], helpItem, logoSrc, isCollapsed, onToggleSidebar }) {
   
   const sidebarRef = useRef(null);
-
-  // Función para determinar las clases CSS de los links (activo/inactivo)
+  
   const getLinkClasses = ({ isActive }) => {
     let base = "flex items-center py-3 transition-colors duration-200 w-full";
     

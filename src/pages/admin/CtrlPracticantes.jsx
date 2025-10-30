@@ -407,7 +407,7 @@ export default function GestionPracticantes() {
   return (
     <div className="space-y-6">
       {/* ... JSX sin cambios ... */}
-       <h1 className="text-3xl font-bold text-gray-800">Gestión Practicantes</h1>
+       <h1 className="text-3xl font-bold text-gray-800">Control de Practicantes</h1>
       <input
         type="file"
         ref={fileInputRef}
