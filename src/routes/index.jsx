@@ -9,6 +9,7 @@ import LayoutEmisor from "../components/layoutEmisor/LayoutEmisor";
 import Login from "../pages/auth/Login";
 import Forgot from "../pages/auth/Forgot.jsx";
 import Reset from "../pages/auth/Reset.jsx";
+import SolicitudAcceso from '../pages/auth/SolicitudAcceso';
 
 // Páginas Super Admin
 import DashboardSuper from "../pages/superadmin/DashboardSuper";
@@ -38,6 +39,7 @@ export default function AppRouter() {
       <Route path="/login" element={<Login />} />
       <Route path="/Forgot" element={<Forgot />} />
       <Route path="/Reset" element={<Reset />} />
+      <Route path="/solicitar-acceso" element={<SolicitudAcceso />} />
 
   
       <Route path="/" element={<Navigate to="/login" replace />} />

@@ -146,7 +146,7 @@ const handleSubmit = async (e) => {
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
               ¿Eres una empresa?{' '}
-              <Link to="/contact" className="font-medium text-[#243c7a] hover:opacity-80">
+              <Link to="/solicitar-acceso" className="font-medium text-[#243c7a] hover:opacity-80">
                 Solicita tu acceso aquí
               </Link>
             </p>

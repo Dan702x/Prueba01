@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
-  FunnelIcon,
   MagnifyingGlassIcon,
   ChevronLeftIcon,
   ChevronRightIcon
@@ -12,10 +11,23 @@ const StatusBadge = ({ isActive }) => {
   return <span className={`${baseClasses} bg-gray-100 text-gray-800`}>Inactivo</span>;
 };
 
+// --- Helper para convertir fecha DD/MM/YY a un objeto Date comparable ---
+const parseDate = (dateString) => {
+    if (!dateString) return null;
+    const parts = dateString.split('/');
+    // Asume formato DD/MM/YY y lo convierte a YYYY-MM-DD para el objeto Date
+    return new Date(`20${parts[2]}`, parts[1] - 1, parts[0]);
+};
+
 export default function GestionEventosEmisor() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
+
+  // --- Estados para los filtros ---
+  const [estadoFiltro, setEstadoFiltro] = useState('Todos');
+  const [fechaInicioFiltro, setFechaInicioFiltro] = useState('');
+  const [fechaFinFiltro, setFechaFinFiltro] = useState('');
 
   const [eventos, setEventos] = useState([
     { id: 1, nombre: 'Curso de React Avanzado', responsable: 'Juan Diego', fechaInicio: '01/08/25', fechaFin: '31/10/25', estado: true },
@@ -31,19 +43,39 @@ export default function GestionEventosEmisor() {
     { id: 11, nombre: 'Curso de Marketing Digital', responsable: 'Ana Gómez', fechaInicio: '15/06/26', fechaFin: '30/06/26', estado: true },
   ]);
 
-  const filteredItems = useMemo(() => eventos.filter(evento => evento.nombre.toLowerCase().includes(searchTerm.toLowerCase())), [eventos, searchTerm]);
+  // --- Lógica de filtrado actualizada ---
+  const filteredItems = useMemo(() => {
+    setCurrentPage(1); // Resetea la página con cada cambio de filtro
+    return eventos.filter(evento => {
+        const searchMatch = evento.nombre.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        const estadoMatch = estadoFiltro === 'Todos' ||
+            (estadoFiltro === 'Activo' && evento.estado) ||
+            (estadoFiltro === 'Inactivo' && !evento.estado);
+
+        const fechaInicioEvento = parseDate(evento.fechaInicio);
+        const filtroInicio = fechaInicioFiltro ? new Date(fechaInicioFiltro) : null;
+        const dateStartMatch = !filtroInicio || fechaInicioEvento >= filtroInicio;
+
+        const fechaFinEvento = parseDate(evento.fechaFin);
+        const filtroFin = fechaFinFiltro ? new Date(fechaFinFiltro) : null;
+        const dateEndMatch = !filtroFin || fechaFinEvento <= filtroFin;
+        
+        return searchMatch && estadoMatch && dateStartMatch && dateEndMatch;
+    });
+  }, [eventos, searchTerm, estadoFiltro, fechaInicioFiltro, fechaFinFiltro]);
+
   const currentItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return filteredItems.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredItems, currentPage, itemsPerPage]);
+  
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
 
   const goToNextPage = useCallback(() => setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev)), [totalPages]);
   const goToPreviousPage = useCallback(() => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev)), []);
-  const handleSearchChange = useCallback((event) => { setSearchTerm(event.target.value); setCurrentPage(1); }, []);
 
   return (
-    // CAMBIO REALIZADO AQUÍ: Se eliminó p-4 md:p-8
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-800">Gestión de Eventos y Cursos</h1>
 
@@ -51,7 +83,8 @@ export default function GestionEventosEmisor() {
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Filtros</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
-          {/* Campo 1: por ejemplo Nombre del Evento */}
+          
+          {/* Campo 1: Nombre del Evento */}
           <div className="col-span-1 lg:col-span-4">
             <label htmlFor="search-evento" className="block text-sm font-medium text-gray-700 mb-1">Evento</label>
             <div className="relative">
@@ -61,37 +94,47 @@ export default function GestionEventosEmisor() {
                 id="search-evento"
                 placeholder="Buscar por nombre o código"
                 value={searchTerm}
-                onChange={handleSearchChange}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="form-input block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
 
           {/* Campo 2: Estado */}
-          <div className="col-span-1 sm:col-span-1 lg:col-span-2">
-            <label htmlFor="categoria" className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+          <div className="col-span-1 sm:col-span-1 lg:col-span-3">
+            <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
             <select
-              id="categoria"
+              id="estado"
+              value={estadoFiltro}
+              onChange={(e) => setEstadoFiltro(e.target.value)}
               className="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 pl-3 pr-10"
-            > <option>Todos</option><option>Activo</option><option>Inactivo</option></select>
+            >
+              <option>Todos</option>
+              <option>Activo</option>
+              <option>Inactivo</option>
+            </select>
           </div>
 
           {/* Campo 3: Rango de fechas */}
-          <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+          <div className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-5">
             <label className="block text-sm font-medium text-gray-700 mb-1">Rango de Fechas</label>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <input type="date" className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
+              <input 
+                type="date"
+                value={fechaInicioFiltro}
+                onChange={(e) => setFechaInicioFiltro(e.target.value)} 
+                className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
               <span className="hidden sm:block">-</span>
-              <input type="date" className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
+              <input 
+                type="date"
+                value={fechaFinFiltro}
+                onChange={(e) => setFechaFinFiltro(e.target.value)} 
+                className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
             </div>
           </div>
+          
+          {/* Botón Filtrar ELIMINADO */}
 
-          {/* Botón Filtrar */}
-          <div className="col-span-1 sm:col-span-1 lg:col-span-2 flex">
-            <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">
-              <FunnelIcon className="h-5 w-5" /> Filtrar
-            </button>
-          </div>
         </div>
       </div>
 
@@ -117,7 +160,7 @@ export default function GestionEventosEmisor() {
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="4" className="text-center py-10 px-6 text-gray-500">{searchTerm ? `No hay eventos que coincidan con "${searchTerm}".` : "No hay eventos para mostrar."}</td></tr>
+                <tr><td colSpan="4" className="text-center py-10 px-6 text-gray-500">No se encontraron eventos con los filtros aplicados.</td></tr>
               )}
             </tbody>
           </table>
