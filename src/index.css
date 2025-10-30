@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import de dependencias */
+@import "react-datepicker/dist/react-datepicker.css";
+
 body {
   min-height: 100vh;
 }
@@ -66,7 +69,7 @@ body {
 /* Estilos Preview Container A4 simulado */
 .preview-container {
   border: 1px solid #ccc;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: white;
   background-size: cover;
   background-position: center;
@@ -159,4 +162,155 @@ body {
 }
 .download-button:hover {
   background-color: #15803d;
+}
+
+/*
+|--------------------------------------------------------------------------
+| --- NUEVOS ESTILOS PARA "SOLICITUDESACCESO" ---
+|--------------------------------------------------------------------------
+*/
+
+/* --- Inputs y Dropdowns de Filtros --- */
+.filtro-input-wrapper {
+  @apply relative my-1;
+}
+.filtro-input {
+  @apply w-full pl-8 pr-2 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm;
+}
+.filtro-input-icon {
+  @apply w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2;
+}
+.filtro-datepicker-input {
+  @apply w-full pl-8 pr-10 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm;
+}
+.filtro-datepicker-clear-btn {
+  @apply absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none;
+}
+.filtro-dropdown-btn {
+  @apply inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500;
+}
+.filtro-dropdown-menu {
+  @apply origin-top-right absolute left-0 md:left-auto right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20;
+}
+.filtro-dropdown-item {
+  @apply block w-full text-left px-4 py-2 text-sm hover:bg-gray-100;
+}
+
+/* --- Estilos de la Tabla --- */
+.tabla-wrapper {
+  @apply bg-white shadow-md rounded-lg overflow-hidden;
+}
+.tabla-container {
+  @apply overflow-x-auto;
+}
+.tabla-header-celda {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+.tabla-header-celda-filtro {
+  @apply px-6 py-2 align-top; /* align-top para que los filtros se alineen bien */
+}
+.tabla-body-celda {
+  @apply px-6 py-4 whitespace-nowrap;
+}
+.tabla-body-fila {
+  @apply hover:bg-gray-50 cursor-pointer;
+}
+
+/* --- Badges de Estado --- */
+.badge-base {
+  @apply px-2 inline-flex text-xs leading-5 font-semibold rounded-full;
+}
+.badge-pendiente {
+  @apply badge-base bg-yellow-100 text-yellow-800;
+}
+.badge-aprobado {
+  @apply badge-base bg-green-100 text-green-800;
+}
+.badge-rechazado {
+  @apply badge-base bg-red-100 text-red-800;
+}
+
+/* --- Botones --- */
+.btn {
+  @apply inline-flex items-center gap-2 px-4 py-2 font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+.btn-primario {
+  @apply btn bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+.btn-secundario {
+  @apply btn bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-blue-500;
+}
+.btn-paginacion {
+  @apply flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.btn-simple {
+  @apply px-4 py-2 rounded-md;
+}
+.btn-simple-rojo {
+  @apply btn-simple bg-red-600 text-white hover:bg-red-700;
+}
+.btn-simple-gris {
+  @apply btn-simple bg-gray-200 text-gray-800 hover:bg-gray-300;
+}
+.btn-accion-circular {
+  @apply p-2 rounded-full transition-colors;
+}
+.btn-accion-aprobar {
+  @apply btn-accion-circular text-green-600 bg-green-100 hover:bg-green-200;
+}
+.btn-accion-rechazar {
+  @apply btn-accion-circular text-red-600 bg-red-100 hover:bg-red-200;
+}
+.btn-accion-texto {
+  @apply font-medium text-blue-600 hover:text-blue-800 mt-2 inline-flex items-center gap-1;
+}
+
+/* --- Modales --- */
+.modal-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4;
+}
+.modal-panel {
+  @apply bg-white rounded-lg shadow-2xl p-6 w-full max-w-md z-50 relative;
+}
+.modal-titulo {
+  @apply text-lg font-medium leading-6 text-gray-900;
+}
+.modal-texto {
+  @apply text-sm text-gray-600 mb-2;
+}
+.modal-textarea {
+  @apply w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+.modal-botones-contenedor {
+  @apply mt-6 flex justify-end space-x-3;
+}
+.modal-detalle-panel {
+  @apply bg-white rounded-lg shadow-2xl p-6 w-full max-w-md z-50 flex flex-col max-h-[90vh] relative;
+}
+.modal-detalle-titulo {
+  @apply text-xl font-semibold leading-6 text-gray-900 mb-4 flex-shrink-0 pr-10;
+}
+.modal-detalle-close-btn {
+  @apply absolute top-3 right-3 p-2 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors;
+}
+.modal-detalle-body {
+  @apply space-y-3 text-sm text-gray-700 mb-6 border-t border-b border-gray-200 py-4 overflow-y-auto flex-grow;
+}
+.modal-detalle-fila {
+  @apply flex justify-between;
+}
+.modal-detalle-label {
+  @apply text-gray-500 mr-2 font-medium; /* Era 'strong' así que 'font-medium' es apropiado */
+}
+.modal-detalle-valor {
+  @apply text-right;
+}
+.modal-detalle-valor-break {
+  @apply text-right break-all; /* Para emails largos */
+}
+.modal-detalle-footer {
+  @apply flex justify-between items-center flex-shrink-0 gap-4 mt-auto;
+}
+.modal-detalle-btn-accion {
+  @apply flex-1 px-4 py-2 rounded-md flex items-center justify-center gap-1 text-sm font-medium;
 }

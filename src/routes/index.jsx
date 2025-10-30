@@ -15,6 +15,7 @@ import DashboardSuper from "../pages/superadmin/DashboardSuper";
 import ListaPlantillasSuperAdmin from "../pages/superadmin/ListaPlantillasSuperAdmin";
 import EditorPlantillaSuperAdmin from "../pages/superadmin/EditorPlantillaSuperAdmin";
 import SolicitudesAcceso from "../pages/superadmin/SolicitudesAcceso";
+import CtrlEmpresas from "../pages/superadmin/CtrlEmpresas";
 
 // Páginas Admin Empresa
 import DashboardAdmin from "../pages/admin/DashboardAdmin";
@@ -50,7 +51,9 @@ export default function AppRouter() {
         <Route path="/super/plantillas/crear" element={<EditorPlantillaSuperAdmin />} />
         <Route path="/super/plantillas/editar/:id" element={<EditorPlantillaSuperAdmin />} />
         <Route path="/super/auditoria" element={<div>Página de Auditoría (Super)</div>} />
-        <Route path="/super/empresas" element={<div>Página de Mnt. Empresas</div>} />
+        
+        <Route path="/super/empresas" element={<CtrlEmpresas />} />
+        
         <Route path="/super/accesos" element={<SolicitudesAcceso />} />
         <Route path="/super/ayuda" element={<div>Página de Centro de Ayuda</div>} />
       </Route>

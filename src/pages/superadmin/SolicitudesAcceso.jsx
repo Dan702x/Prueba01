@@ -9,28 +9,19 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CalendarIcon,
-  DocumentTextIcon, 
-  CheckCircleIcon, 
-  XCircleIcon, 
-  ClockIcon, 
-  ArrowDownTrayIcon, 
+  DocumentTextIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/react/24/solid";
 
-
-import ExcelJS from 'exceljs';
-
-
+import ExcelJS from "exceljs";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-
-
-
-
-
 const adminActual = "Roy Silva (Super Admin)";
-
 
 const solicitudesIniciales = [
   {
@@ -127,7 +118,6 @@ const solicitudesIniciales = [
   },
 ];
 
-
 function FilterInput({ value, onChange, placeholder = "Filtrar..." }) {
   const handleClick = (e) => {
     e.stopPropagation();
@@ -148,9 +138,8 @@ function FilterInput({ value, onChange, placeholder = "Filtrar..." }) {
   );
 }
 
-
 const CustomDateInput = React.forwardRef(
-  ({ value, onClick, placeholder, onClear }, ref) => (
+  ({ value, onClick, onChange, placeholder, onClear }, ref) => (
     <div className="relative my-1">
       <input
         type="text"
@@ -158,13 +147,12 @@ const CustomDateInput = React.forwardRef(
         value={value}
         placeholder={placeholder}
         onClick={onClick}
+        onChange={onChange}
         ref={ref}
-        readOnly
       />
-      
+
       <CalendarIcon className="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
 
-      
       {value && (
         <button
           type="button"
@@ -181,9 +169,7 @@ const CustomDateInput = React.forwardRef(
   )
 );
 
-
 function StatCard({ label, value, icon, color = "blue" }) {
-  
   const colorClasses = {
     blue: { bg: "bg-blue-100", text: "text-blue-600" },
     green: { bg: "bg-green-100", text: "text-green-600" },
@@ -208,7 +194,6 @@ function StatCard({ label, value, icon, color = "blue" }) {
   );
 }
 
-
 export default function SolicitudesAcceso() {
   const [solicitudes, setSolicitudes] = useState(solicitudesIniciales);
 
@@ -225,7 +210,6 @@ export default function SolicitudesAcceso() {
   const [paginaActual, setPaginaActual] = useState(1);
   const [elementosPorPagina] = useState(3);
 
-  
   const [modalRechazoVisible, setModalRechazoVisible] = useState(false);
   const [solicitudARechazar, setSolicitudARechazar] = useState(null);
   const [motivoRechazo, setMotivoRechazo] = useState("");
@@ -234,12 +218,10 @@ export default function SolicitudesAcceso() {
   const [modalDetallesVisible, setModalDetallesVisible] = useState(false);
   const [solicitudParaDetalles, setSolicitudParaDetalles] = useState(null);
 
-  
   const [dropdownAbierto, setDropdownAbierto] = useState(false);
   const dropdownRef = useRef(null);
   const opcionesEstado = ["Todos", "Pendiente", "Aprobado", "Rechazado"];
 
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -250,13 +232,11 @@ export default function SolicitudesAcceso() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  
   const seleccionarEstadoDropdown = (estado) => {
     handleFiltroColumna("estado", estado);
     setDropdownAbierto(false);
   };
 
-  
   const handleFiltroColumna = (columna, valor) => {
     setFiltrosColumna((prev) => ({
       ...prev,
@@ -265,7 +245,6 @@ export default function SolicitudesAcceso() {
     setPaginaActual(1);
   };
 
-  
   const handleRangoFechaChange = (update) => {
     if (Array.isArray(update)) {
       const [start, end] = update;
@@ -278,35 +257,31 @@ export default function SolicitudesAcceso() {
     setPaginaActual(1);
   };
 
-  
   const limpiarFechas = () => {
     setFechaInicio(null);
     setFechaFin(null);
     setPaginaActual(1);
   };
 
-  
   const handleDownloadExcel = async () => {
     try {
       const wb = new ExcelJS.Workbook();
       const ws = wb.addWorksheet("Solicitudes");
 
-      
       const titleRow = ws.addRow(["Reporte de Solicitudes de Acceso - CERTIFY"]);
-      ws.mergeCells(`A${titleRow.number}:K${titleRow.number}`); 
+      ws.mergeCells(`A${titleRow.number}:K${titleRow.number}`);
       const titleCell = ws.getCell(`A${titleRow.number}`);
       titleCell.font = {
-        name: "Arial Black", 
+        name: "Arial Black",
         size: 16,
         bold: true,
-        color: { argb: "FF2F5597" }, 
+        color: { argb: "FF2F5597" },
       };
       titleCell.alignment = { horizontal: "center" };
-      ws.getRow(titleRow.number).height = 30; 
+      ws.getRow(titleRow.number).height = 30;
 
-      ws.addRow([]); 
+      ws.addRow([]);
 
-      
       const filtersTitleRow = ws.addRow(["Filtros Aplicados"]);
       ws.mergeCells(`A${filtersTitleRow.number}:K${filtersTitleRow.number}`);
       const filtersTitleCell = ws.getCell(`A${filtersTitleRow.number}`);
@@ -314,35 +289,35 @@ export default function SolicitudesAcceso() {
         name: "Arial",
         size: 12,
         bold: true,
-        color: { argb: "FF4472C4" }, 
+        color: { argb: "FF4472C4" },
       };
       filtersTitleCell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "FFE9EFFF" }, 
+        fgColor: { argb: "FFE9EFFF" },
       };
-      
-      
-      const formatDate = (date) => 
+
+      const formatDate = (date) =>
         date ? new Date(date).toLocaleDateString("es-ES") : "N/A";
 
-      
       const filtersData = [
         ["Usuario:", filtrosColumna.usuario || "Todos"],
         ["Empresa:", filtrosColumna.empresa || "Todos"],
         ["Razón/RUC:", filtrosColumna.razonRuc || "Todos"],
         ["Estado:", filtrosColumna.estado || "Todos"],
-        ["Rango de Fechas:", `${formatDate(fechaInicio)} - ${formatDate(fechaFin)}`],
+        [
+          "Rango de Fechas:",
+          `${formatDate(fechaInicio)} - ${formatDate(fechaFin)}`,
+        ],
       ];
-      
+
       filtersData.forEach(([label, value]) => {
         const row = ws.addRow([label, value]);
-        ws.getCell(`A${row.number}`).font = { bold: true }; 
+        ws.getCell(`A${row.number}`).font = { bold: true };
       });
 
-      ws.addRow([]); 
+      ws.addRow([]);
 
-      
       const headers = [
         "ID",
         "Nombre",
@@ -358,15 +333,14 @@ export default function SolicitudesAcceso() {
       ];
       const headerRow = ws.addRow(headers);
 
-      
       headerRow.eachCell((cell) => {
         cell.fill = {
           type: "pattern",
           pattern: "solid",
-          fgColor: { argb: "FF4472C4" }, 
+          fgColor: { argb: "FF4472C4" },
         };
         cell.font = {
-          color: { argb: "FFFFFFFF" }, 
+          color: { argb: "FFFFFFFF" },
           bold: true,
         };
         cell.border = {
@@ -377,14 +351,13 @@ export default function SolicitudesAcceso() {
         };
       });
 
-      
       const cellBorder = {
-          top: { style: "thin" },
-          left: { style: "thin" },
-          bottom: { style: "thin" },
-          right: { style: "thin" },
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
       };
-      
+
       solicitudesFiltradas.forEach((s) => {
         const rowData = [
           s.id,
@@ -395,74 +368,65 @@ export default function SolicitudesAcceso() {
           s.ruc,
           s.fecha,
           s.estado,
-          s.gestionadoPor || "-", 
+          s.gestionadoPor || "-",
           s.fechaGestion || "-",
           s.motivoRechazo || "-",
         ];
         const dataRow = ws.addRow(rowData);
-        
-        
-        const idCell = dataRow.getCell(1); 
+
+        const idCell = dataRow.getCell(1);
         idCell.fill = {
           type: "pattern",
           pattern: "solid",
-          fgColor: { argb: "FFE9EFFF" }, 
+          fgColor: { argb: "FFE9EFFF" },
         };
         idCell.font = { bold: true };
-        
-        
+
         dataRow.eachCell((cell) => {
           cell.border = cellBorder;
         });
 
-        
-        const motivoRechazoCell = dataRow.getCell(11); 
+        const motivoRechazoCell = dataRow.getCell(11);
         motivoRechazoCell.alignment = { wrapText: true };
       });
 
-      
-      
-      ws.getColumn(1).width = 5;  
-      ws.getColumn(2).width = 25; 
-      ws.getColumn(3).width = 30; 
-      ws.getColumn(4).width = 20; 
-      ws.getColumn(5).width = 35; 
-      ws.getColumn(6).width = 15; 
-      ws.getColumn(7).width = 15; 
-      ws.getColumn(8).width = 12; 
-      ws.getColumn(9).width = 25; 
-      ws.getColumn(10).width = 15; 
-      
-      ws.getColumn(11).width = 50; 
+      ws.getColumn(1).width = 5;
+      ws.getColumn(2).width = 25;
+      ws.getColumn(3).width = 30;
+      ws.getColumn(4).width = 20;
+      ws.getColumn(5).width = 35;
+      ws.getColumn(6).width = 15;
+      ws.getColumn(7).width = 15;
+      ws.getColumn(8).width = 12;
+      ws.getColumn(9).width = 25;
+      ws.getColumn(10).width = 15;
 
-      
+      ws.getColumn(11).width = 50;
+
       ws.autoFilter = `A${headerRow.number}:K${headerRow.number}`;
 
-      
       const buffer = await wb.xlsx.writeBuffer();
       const blob = new Blob([buffer], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-      
-      
+
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = "reporte_solicitudes_profesional.xlsx";
       document.body.appendChild(a);
       a.click();
-      
-      
+
       a.remove();
       window.URL.revokeObjectURL(url);
-      
     } catch (error) {
       console.error("Error al generar el archivo Excel:", error);
-      alert("Hubo un error al generar el reporte. Revisa la consola para más detalles.");
+      alert(
+        "Hubo un error al generar el reporte. Revisa la consola para más detalles."
+      );
     }
   };
-  
-  
+
   const handleAprobar = (id) => {
     const fechaDeHoy = new Date().toLocaleDateString("es-ES");
     alert(`Usuario ${id} aprobado por ${adminActual}`);
@@ -537,7 +501,6 @@ export default function SolicitudesAcceso() {
     setSolicitudParaDetalles(null);
   };
 
-
   const solicitudesFiltradas = useMemo(() => {
     return solicitudes.filter((s) => {
       const filtroUsuarioLower = filtrosColumna.usuario.toLowerCase();
@@ -590,7 +553,6 @@ export default function SolicitudesAcceso() {
     });
   }, [solicitudes, filtrosColumna, fechaInicio, fechaFin]);
 
-  
   const estadisticasFiltradas = useMemo(() => {
     const total = solicitudesFiltradas.length;
     const aprobadas = solicitudesFiltradas.filter(
@@ -606,7 +568,6 @@ export default function SolicitudesAcceso() {
     return { total, aprobadas, rechazadas, pendientes };
   }, [solicitudesFiltradas]);
 
-  
   const totalPaginas = Math.ceil(
     solicitudesFiltradas.length / elementosPorPagina
   );
@@ -625,21 +586,19 @@ export default function SolicitudesAcceso() {
 
   return (
     <div>
-      
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">
           Solicitudes de Acceso
         </h1>
         <button
-          onClick={handleDownloadExcel} 
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          onClick={handleDownloadExcel}
+          className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           <ArrowDownTrayIcon className="w-5 h-5" />
           Descargar Excel
         </button>
       </div>
 
-      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard
           label="Total (Filtradas)"
@@ -666,14 +625,11 @@ export default function SolicitudesAcceso() {
           color="red"
         />
       </div>
-      
 
-      
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
-              
               <tr>
                 <th
                   scope="col"
@@ -713,7 +669,6 @@ export default function SolicitudesAcceso() {
                 </th>
               </tr>
 
-              
               <tr className="bg-gray-50 border-t border-gray-200">
                 <th className="px-6 py-2">
                   <FilterInput
@@ -743,7 +698,6 @@ export default function SolicitudesAcceso() {
                   />
                 </th>
 
-                
                 <th className="px-6 py-2 hidden md:table-cell">
                   <DatePicker
                     selectsRange={true}
@@ -754,11 +708,9 @@ export default function SolicitudesAcceso() {
                     placeholderText="Filtrar por fecha..."
                     customInput={<CustomDateInput onClear={limpiarFechas} />}
                     autoComplete="off"
-                    
                   />
                 </th>
 
-                
                 <th className="px-6 py-2 relative" ref={dropdownRef}>
                   <button
                     type="button"
@@ -799,12 +751,10 @@ export default function SolicitudesAcceso() {
                   )}
                 </th>
 
-                <th className="px-6 py-2 hidden md:table-cell">
-                  
-                </th>
+                <th className="px-6 py-2 hidden md:table-cell"></th>
               </tr>
             </thead>
-            
+
             <tbody className="bg-white divide-y divide-gray-200">
               {solicitudesPaginadas.length > 0 ? (
                 solicitudesPaginadas.map((solicitud) => (
@@ -813,7 +763,6 @@ export default function SolicitudesAcceso() {
                     onClick={() => handleVerDetalles(solicitud)}
                     className="hover:bg-gray-50 cursor-pointer"
                   >
-                    
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
                         {solicitud.nombre}
@@ -822,13 +771,13 @@ export default function SolicitudesAcceso() {
                         {solicitud.email}
                       </div>
                     </td>
-                    
+
                     <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                       <div className="text-sm text-gray-900">
                         {solicitud.empresa}
                       </div>
                     </td>
-                    
+
                     <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                       <div className="text-sm text-gray-900 font-medium">
                         {solicitud.razonSocial}
@@ -837,13 +786,13 @@ export default function SolicitudesAcceso() {
                         {solicitud.ruc}
                       </div>
                     </td>
-                    
+
                     <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                       <div className="text-sm text-gray-500">
                         {solicitud.fecha}
                       </div>
                     </td>
-                    
+
                     <td className="px-6 py-4 whitespace-nowrap">
                       {solicitud.estado === "Pendiente" && (
                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
@@ -861,7 +810,7 @@ export default function SolicitudesAcceso() {
                         </span>
                       )}
                     </td>
-                    
+
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium hidden md:table-cell">
                       <div>
                         {solicitud.estado === "Pendiente" && (
@@ -936,9 +885,7 @@ export default function SolicitudesAcceso() {
           </table>
         </div>
       </div>
-      
 
-      
       {totalPaginas > 1 && (
         <div className="flex justify-center items-center gap-4 pt-6">
           <button
@@ -963,7 +910,16 @@ export default function SolicitudesAcceso() {
         </div>
       )}
 
-      
+      <div className="mt-6 md:hidden">
+        <button
+          onClick={handleDownloadExcel}
+          className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          <ArrowDownTrayIcon className="w-5 h-5" />
+          Descargar Excel
+        </button>
+      </div>
+
       {modalRechazoVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md z-50">
