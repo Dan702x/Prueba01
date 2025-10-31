@@ -1,0 +1,109 @@
+/* --- Layout Principal --- */
+.cu-container {
+  /* @apply p-6; */ /* <-- CAMBIO: Eliminado el padding general */
+}
+.cu-header {
+  @apply flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4;
+}
+.cu-titulo {
+  @apply text-3xl font-bold text-gray-800;
+}
+.cu-stats-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4;
+}
+
+/* --- Badges de Estado (los que faltaban en index.css) --- */
+.badge-activo {
+  @apply px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800;
+}
+.badge-inactivo {
+  @apply px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800;
+}
+
+/* --- Botones de Acción de la Tabla --- */
+.btn-accion-reset {
+  @apply p-2 rounded-full text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors;
+}
+.btn-accion-editar {
+  @apply p-2 rounded-full text-blue-600 bg-blue-100 hover:bg-blue-200 transition-colors;
+}
+.btn-accion-eliminar {
+  @apply p-2 rounded-full text-red-600 bg-red-100 hover:bg-red-200 transition-colors;
+}
+
+/* --- Paginación --- */
+.cu-paginacion-contenedor {
+  @apply flex justify-center items-center gap-4 pt-6;
+}
+
+/* --- Estilos para Forms (en Modales) --- */
+.cu-form-label {
+  @apply block text-sm font-medium text-gray-700;
+}
+.cu-form-input {
+  @apply mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+}
+.cu-form-select {
+  @apply mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+}
+.cu-form-select-padding {
+  @apply mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 pl-3 pr-10 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+}
+.cu-form-nota {
+  @apply text-xs text-gray-500;
+}
+
+/* --- Modal de Acciones Móvil --- */
+.cu-modal-movil-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 z-40 flex items-end justify-center md:hidden;
+}
+.cu-modal-movil-panel {
+  @apply bg-white rounded-t-lg shadow-2xl w-full max-w-md z-50;
+}
+.cu-modal-movil-header {
+  @apply flex justify-between items-start p-4 border-b border-gray-200;
+}
+.cu-modal-movil-header-info {
+  @apply flex-1;
+}
+.cu-modal-movil-header-titulo {
+  @apply text-lg font-medium leading-6 text-gray-900;
+}
+.cu-modal-movil-header-subtitulo {
+  @apply text-sm text-gray-500 mt-1;
+}
+.cu-modal-movil-close-btn {
+  @apply p-2 -mt-2 -mr-2 rounded-full text-gray-400 hover:bg-gray-100;
+}
+.cu-modal-movil-body {
+  @apply p-4 space-y-3;
+}
+.cu-modal-movil-btn {
+  @apply w-full flex items-center gap-3 px-4 py-3 rounded-md text-left;
+}
+.cu-modal-movil-btn-reset {
+  @apply cu-modal-movil-btn bg-gray-100 text-gray-800 hover:bg-gray-200;
+}
+.cu-modal-movil-btn-edit {
+  @apply cu-modal-movil-btn bg-blue-100 text-blue-800 hover:bg-blue-200;
+}
+.cu-modal-movil-btn-delete {
+  @apply cu-modal-movil-btn bg-red-100 text-red-800 hover:bg-red-200;
+}
+
+/* --- Toast de Éxito --- */
+.cu-toast-wrapper {
+  @apply fixed top-5 right-5 z-50;
+}
+.cu-toast-panel {
+  @apply max-w-sm w-full bg-green-500 text-white rounded-md shadow-lg flex items-center p-4;
+}
+.cu-toast-icon {
+  @apply w-6 h-6 mr-3;
+}
+.cu-toast-msg {
+  @apply flex-1 text-sm font-medium;
+}
+.cu-toast-close-btn {
+  @apply ml-3 p-1 rounded-md hover:bg-green-600 focus:outline-none;
+}

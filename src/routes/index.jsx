@@ -17,6 +17,7 @@ import ListaPlantillasSuperAdmin from "../pages/superadmin/ListaPlantillasSuperA
 import EditorPlantillaSuperAdmin from "../pages/superadmin/EditorPlantillaSuperAdmin";
 import SolicitudesAcceso from "../pages/superadmin/SolicitudesAcceso";
 import CtrlEmpresas from "../pages/superadmin/CtrlEmpresas";
+import CtrlUsuarios from "../pages/superadmin/CtrlUsuarios"; // Asegúrate que la importación esté
 
 // Páginas Admin Empresa
 import DashboardAdmin from "../pages/admin/DashboardAdmin";
@@ -44,22 +45,28 @@ export default function AppRouter() {
   
       <Route path="/" element={<Navigate to="/login" replace />} />
 
-
+      {/* --- RUTAS SUPER ADMIN --- */}
       <Route element={<LayoutSuperAdmin />}>
         <Route path="/super" element={<Navigate to="/super/dashboard" replace />} />
         <Route path="/super/dashboard" element={<DashboardSuper />} />
-        <Route path="/super/usuarios" element={<div>Página de Mnt. Usuarios (Super)</div>} />
+          
+          {/* --- ¡CORRECCIÓN AQUÍ! --- */}
+          {/* Se eliminó la ruta duplicada que estaba aquí */}
+
         <Route path="/super/plantillas" element={<ListaPlantillasSuperAdmin />} />
         <Route path="/super/plantillas/crear" element={<EditorPlantillaSuperAdmin />} />
         <Route path="/super/plantillas/editar/:id" element={<EditorPlantillaSuperAdmin />} />
         <Route path="/super/auditoria" element={<div>Página de Auditoría (Super)</div>} />
         
         <Route path="/super/empresas" element={<CtrlEmpresas />} />
+        {/* Esta es la única ruta y ahora funcionará */}
+        <Route path="/super/usuarios" element={<CtrlUsuarios />} /> 
         
         <Route path="/super/accesos" element={<SolicitudesAcceso />} />
         <Route path="/super/ayuda" element={<div>Página de Centro de Ayuda</div>} />
       </Route>
 
+      {/* --- RUTAS ADMIN EMPRESA --- */}
       <Route element={<LayoutAdmin />}>
         <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/dashboard" element={<DashboardAdmin />} />
@@ -83,7 +90,7 @@ export default function AppRouter() {
         <Route path="/emisor" element={<Navigate to="/emisor/dashboard" replace />} />
         <Route path="/emisor/dashboard" element={<DashboardEmisor />} /> 
         <Route path="/emisor/practicantes" element={<CtrlPracticantesEmisor />} />
-        <Route path="/emisor/plantillas" element={<div>Página de Mnt. Plantillas (Emisor)</div>} />
+  T     <Route path="/emisor/plantillas" element={<div>Página de Mnt. Plantillas (Emisor)</div>} />
         <Route path="/emisor/em-certificados" element={<div>Página de Emisión de Certificados (Emisor)</div>} />
         <Route path="/emisor/eventos" element={<CtrlEventosEmisor />} />
         <Route path="/emisor/ayuda" element={<div>Página de Centro de Ayuda (Emisor)</div>} />
