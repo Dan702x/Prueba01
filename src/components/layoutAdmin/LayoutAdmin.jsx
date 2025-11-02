@@ -8,7 +8,7 @@ import {
   ShieldCheckIcon, BuildingOfficeIcon, IdentificationIcon, 
   QuestionMarkCircleIcon, AcademicCapIcon, DocumentTextIcon, DocumentArrowUpIcon,
   UserCircleIcon,
-  BriefcaseIcon // ¡¡¡1. IMPORTAMOS EL NUEVO ÍCONO!!!
+  BriefcaseIcon
 } from '@heroicons/react/24/solid';
 
 const iconClass = "w-6 h-6";
@@ -26,12 +26,15 @@ export default function LayoutAdmin() {
     { label: 'Ctrl. Usuarios', to: '/admin/usuarios', icon: <UsersIcon className={iconClass} /> },
     { label: 'Ctrl. Áreas/Proyectos', to: '/admin/areas', icon: <BriefcaseIcon className={iconClass} /> }, 
     { label: 'Ctrl. Supervisores', to: '/admin/supervisores', icon: <UserCircleIcon className={iconClass} /> },
-    { label: 'Ctrl. Practicantes', to: '/admin/practicantes', icon: <AcademicCapIcon className={iconClass} /> },
+    
+    // --- CAMBIO AQUÍ ---
+    { label: 'Ctrl. Participantes', to: '/admin/participantes', icon: <AcademicCapIcon className={iconClass} /> },
+
     { label: 'Ctrl. Certificados', to: '/admin/certificados', icon: <DocumentTextIcon className={iconClass} /> },
-    { label: 'Ctrl. Plantillas', to: '/admin/plantillas', icon: <RectangleStackIcon className={iconClass} /> }, // Este se queda igual
+    { label: 'Ctrl. Plantillas', to: '/admin/plantillas', icon: <RectangleStackIcon className={iconClass} /> },
     { label: 'Emis. Certificados', to: '/admin/em-certificados', icon: <DocumentArrowUpIcon className={iconClass} /> },
     { label: 'Auditoría', to: '/admin/auditoria', icon: <ShieldCheckIcon className={iconClass} /> },
-    { label: 'Ctrl. Eventos/Cursos', to: '/admin/eventos', icon: <IdentificationIcon className={iconClass} /> },
+    { label: 'Ctrl. Eventos', to: '/admin/eventos', icon: <IdentificationIcon className={iconClass} /> },
   ];
 
   const helpItem = {

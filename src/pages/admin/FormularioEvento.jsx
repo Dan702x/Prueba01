@@ -4,7 +4,12 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
   const [nombre, setNombre] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
-  const [responsable, setResponsable] = useState('');
+  // --- CAMBIO: Separar responsable en nombre y apellido ---
+  const [responsableNombre, setResponsableNombre] = useState('');
+  const [responsableApellido, setResponsableApellido] = useState('');
+
+  // --- CAMBIO: Estado para el mensaje de error ---
+  const [error, setError] = useState('');
 
   const esModoEdicion = Boolean(evento);
   const tituloModal = esModoEdicion ? 'Editar Evento' : 'Crear Nuevo Evento';
@@ -12,17 +17,48 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
   useEffect(() => {
     if (esModoEdicion) {
       setNombre(evento.nombre || '');
-      setFechaInicio(evento.fechaInicio ? evento.fechaInicio.split('/').reverse().join('-') : '');
-      setFechaFin(evento.fechaFin ? evento.fechaFin.split('/').reverse().join('-') : '');
-      setResponsable(evento.responsable || '');
+      setFechaInicio(evento.fechaInicio || '');
+      setFechaFin(evento.fechaFin || '');
+      
+      const nombreCompleto = evento.responsable || '';
+      const primerEspacio = nombreCompleto.indexOf(' '); 
+      
+      if (primerEspacio !== -1) {
+        setResponsableNombre(nombreCompleto.substring(0, primerEspacio));
+        setResponsableApellido(nombreCompleto.substring(primerEspacio + 1));
+      } else {
+        setResponsableNombre(nombreCompleto);
+        setResponsableApellido('');
+      }
     } else {
-      setNombre(''); setFechaInicio(''); setFechaFin(''); setResponsable('');
+      setNombre(''); setFechaInicio(''); setFechaFin('');
+      setResponsableNombre(''); setResponsableApellido('');
     }
   }, [evento, esModoEdicion]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const datosFormulario = { nombre, fechaInicio, fechaFin, responsable };
+    setError(''); // Limpiar error previo
+
+    // --- CAMBIO: Validación de Nombres/Apellidos ---
+    const nombreLleno = responsableNombre.trim() !== '';
+    const apellidoLleno = responsableApellido.trim() !== '';
+
+    // Si uno está lleno pero el otro no, mostrar error
+    if ((nombreLleno && !apellidoLleno) || (!nombreLleno && apellidoLleno)) {
+      setError('Debe completar tanto nombres como apellidos, o dejar ambos campos vacíos.');
+      return; // Detener envío
+    }
+    // --- FIN CAMBIO ---
+
+    const responsableUnido = `${responsableNombre} ${responsableApellido}`.trim();
+    const datosFormulario = { 
+      nombre, 
+      fechaInicio, 
+      fechaFin, 
+      responsable: responsableUnido
+    };
+    
     onSave(datosFormulario);
     onClose();
   };
@@ -49,16 +85,40 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
               <input type="date" id="fechaFin" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} className={`${inputBaseClasses} ${inputPaddingClasses}`} required />
             </div>
           </div>
-          <div>
-            <label htmlFor="responsable" className="block text-sm font-medium text-gray-700 mb-1">Responsable</label>
-            <select id="responsable" value={responsable} onChange={(e) => setResponsable(e.target.value)} className={`form-select ${inputBaseClasses} ${inputPaddingClasses} pr-12`} required>
-              <option value="" disabled>Seleccione un responsable</option>
-              <option value="Juan Diego">Juan Diego</option>
-              <option value="Roy Silva">Roy Silva</option>
-              <option value="Ana Gómez">Ana Gómez</option>
-              <option value="Carlos Ruiz">Carlos Ruiz</option>
-            </select>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="responsableNombre" className="block text-sm font-medium text-gray-700 mb-1">Nombres (Responsable)</label>
+              <input 
+                type="text" 
+                id="responsableNombre" 
+                value={responsableNombre} 
+                onChange={(e) => setResponsableNombre(e.target.value)} 
+                className={`${inputBaseClasses} ${inputPaddingClasses}`} 
+                placeholder="Ej: Juan"
+              />
+            </div>
+            <div>
+              <label htmlFor="responsableApellido" className="block text-sm font-medium text-gray-700 mb-1">Apellidos (Responsable)</label>
+              <input 
+                type="text" 
+                id="responsableApellido" 
+                value={responsableApellido} 
+                onChange={(e) => setResponsableApellido(e.target.value)} 
+                className={`${inputBaseClasses} ${inputPaddingClasses}`} 
+                placeholder="Ej: Pérez"
+              />
+            </div>
           </div>
+
+          {/* --- CAMBIO: Mostrar mensaje de error o nota --- */}
+          {error ? (
+            <p className="text-xs text-red-600 -mt-3 text-center font-medium">{error}</p>
+          ) : (
+            <p className="text-xs text-gray-500 -mt-3">Los campos de responsable son opcionales.</p>
+          )}
+          {/* --- FIN DEL CAMBIO --- */}
+
         </div>
         <div className="flex justify-end gap-4 mt-8">
           <button type="button" onClick={onClose} className="px-6 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300">Cancelar</button>

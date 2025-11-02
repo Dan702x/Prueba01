@@ -25,10 +25,13 @@ export default function LayoutEmisor() {
 
   const sidebarItems = [
     { label: 'Inicio', to: '/emisor/dashboard', icon: <HomeIcon className={iconClass} /> },
-    { label: 'Ctrl. Practicantes', to: '/emisor/practicantes', icon: <AcademicCapIcon className={iconClass} /> },
+    
+    // --- CAMBIO AQUÍ ---
+    { label: 'Ctrl. Participantes', to: '/emisor/participantes', icon: <AcademicCapIcon className={iconClass} /> },
+    
     { label: 'Ctrl. Plantillas', to: '/emisor/plantillas', icon: <DocumentTextIcon className={iconClass} /> },
     { label: 'Emis. Certificados', to: '/emisor/em-certificados', icon: <DocumentArrowUpIcon className={iconClass} /> }, 
-    { label: 'Ctrl. Eventos/Cursos', to: '/emisor/eventos', icon: <IdentificationIcon className={iconClass} /> }, 
+    { label: 'Ctrl. Eventos', to: '/emisor/eventos', icon: <IdentificationIcon className={iconClass} /> }, 
   ];
 
   const helpItem = {

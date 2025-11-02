@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-export default function FormularioPracticante({ onClose, onSave, practicante }) {
+export default function FormularioParticipante({ onClose, onSave, practicante }) {
+  
+  const getTodayDate = () => new Date().toISOString().split('T')[0];
+
   const [formData, setFormData] = useState({
     nombres: '',
     apellidos: '',
     dni: '',
     correo: '',
-    areaProyecto: 'Desarrollo de Software',
-    fechaInicio: '',
-    fechaFin: '',
+    area: '', // <-- CAMBIO: De 'areaProyecto' a 'area'
+    fechaRegistro: getTodayDate(), 
   });
 
   const isEditing = Boolean(practicante);
@@ -20,9 +22,17 @@ export default function FormularioPracticante({ onClose, onSave, practicante }) 
         apellidos: practicante.apellidos || '',
         dni: practicante.dni || '',
         correo: practicante.correo || '',
-        areaProyecto: practicante.areaProyecto || 'Desarrollo de Software',
-        fechaInicio: practicante.fechaInicio ? practicante.fechaInicio.split('/').reverse().join('-') : '',
-        fechaFin: practicante.fechaFin ? practicante.fechaFin.split('/').reverse().join('-') : '',
+        area: practicante.area || '', // <-- CAMBIO: De 'areaProyecto' a 'area'
+        fechaRegistro: practicante.fechaRegistro ? practicante.fechaRegistro.split('/').reverse().join('-') : getTodayDate(),
+      });
+    } else {
+      setFormData({
+        nombres: '',
+        apellidos: '',
+        dni: '',
+        correo: '',
+        area: '',
+        fechaRegistro: getTodayDate(),
       });
     }
   }, [practicante, isEditing]);
@@ -39,7 +49,7 @@ export default function FormularioPracticante({ onClose, onSave, practicante }) 
 
   return (
     <div className="p-8 bg-white rounded-lg">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">{isEditing ? 'Editar Practicante' : 'Nuevo Practicante'}</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">{isEditing ? 'Editar Participante' : 'Nuevo Participante'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="nombres" className="block text-sm font-medium text-gray-700">Nombres</label>
@@ -59,24 +69,38 @@ export default function FormularioPracticante({ onClose, onSave, practicante }) 
           <input type="email" name="correo" id="correo" value={formData.correo} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"/>
         </div>
         <div>
-          <label htmlFor="areaProyecto" className="block text-sm font-medium text-gray-700">Área/Proyecto</label>
-          <select name="areaProyecto" id="areaProyecto" value={formData.areaProyecto} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
-            <option>Desarrollo de Software</option>
-            <option>Soporte de TI</option>
-            <option>Análisis de Datos</option>
-            <option>Marketing Digital</option>
+          {/* --- CAMBIO: Label y name/id --- */}
+          <label htmlFor="area" className="block text-sm font-medium text-gray-700">Área</label>
+          <select 
+            name="area" // <-- CAMBIO
+            id="area"   // <-- CAMBIO
+            value={formData.area} 
+            onChange={handleChange} 
+            required 
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+          >
+            <option value="" disabled>Seleccione un área...</option>
+            <option value="Desarrollo de Software">Desarrollo de Software</option>
+            <option value="Soporte de TI">Soporte de TI</option>
+            <option value="Análisis de Datos">Análisis de Datos</option>
+            <option value="Marketing Digital">Marketing Digital</option>
+            <option value="Participante">Participante</option> {/* <-- CAMBIO */}
           </select>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="fechaInicio" className="block text-sm font-medium text-gray-700">Fecha Inicio</label>
-            <input type="date" name="fechaInicio" id="fechaInicio" value={formData.fechaInicio} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"/>
-          </div>
-          <div>
-            <label htmlFor="fechaFin" className="block text-sm font-medium text-gray-700">Fecha Fin</label>
-            <input type="date" name="fechaFin" id="fechaFin" value={formData.fechaFin} onChange={handleChange} required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"/>
-          </div>
+        
+        <div>
+          <label htmlFor="fechaRegistro" className="block text-sm font-medium text-gray-700">Fecha Registro</label>
+          <input 
+            type="date" 
+            name="fechaRegistro" 
+            id="fechaRegistro" 
+            value={formData.fechaRegistro} 
+            onChange={handleChange} 
+            required 
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+          />
         </div>
+
         <div className="flex justify-end gap-4 pt-4">
           <button type="button" onClick={onClose} className="px-6 py-2 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300">Cancelar</button>
           <button type="submit" className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">Guardar Cambios</button>

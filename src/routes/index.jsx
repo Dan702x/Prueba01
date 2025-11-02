@@ -17,7 +17,7 @@ import ListaPlantillasSuperAdmin from "../pages/superadmin/ListaPlantillasSuperA
 import EditorPlantillaSuperAdmin from "../pages/superadmin/EditorPlantillaSuperAdmin";
 import SolicitudesAcceso from "../pages/superadmin/SolicitudesAcceso";
 import CtrlEmpresas from "../pages/superadmin/CtrlEmpresas";
-import CtrlUsuarios from "../pages/superadmin/CtrlUsuarios"; // Asegúrate que la importación esté
+import CtrlUsuarios from "../pages/superadmin/CtrlUsuarios";
 
 // Páginas Admin Empresa
 import DashboardAdmin from "../pages/admin/DashboardAdmin";
@@ -25,12 +25,14 @@ import AuditoriaAdmin from "../pages/admin/AuditoriaAdmin";
 import CtrlEventos from "../pages/admin/CtrlEventos.jsx";
 import ListaPlantillasAdmin from "../pages/admin/ListaPlantillasAdmin";
 import PersonalizadorPlantillaAdmin from "../pages/admin/PersonalizadorPlantillaAdmin";
-import CtrlPracticantes from "../pages/admin/CtrlPracticantes.jsx";
+// --- CAMBIO AQUÍ ---
+import CtrlParticipantes from "../pages/admin/CtrlParticipantes.jsx"; // Importación actualizada
 
 // Páginas Emisor
 import DashboardEmisor from "../pages/emisor/DashboardEmisor";
 import CtrlEventosEmisor from "../pages/emisor/CtrlEventosEmisor";
-import CtrlPracticantesEmisor from "../pages/emisor/CtrlPracticantesEmisor.jsx";
+// --- CAMBIO AQUÍ ---
+import CtrlParticipantesEmisor from "../pages/emisor/CtrlParticipantesEmisor.jsx"; // Importación actualizada
 
 export default function AppRouter() {
   
@@ -47,21 +49,15 @@ export default function AppRouter() {
 
       {/* --- RUTAS SUPER ADMIN --- */}
       <Route element={<LayoutSuperAdmin />}>
+        {/* ... (rutas super admin sin cambios) ... */}
         <Route path="/super" element={<Navigate to="/super/dashboard" replace />} />
         <Route path="/super/dashboard" element={<DashboardSuper />} />
-          
-          {/* --- ¡CORRECCIÓN AQUÍ! --- */}
-          {/* Se eliminó la ruta duplicada que estaba aquí */}
-
         <Route path="/super/plantillas" element={<ListaPlantillasSuperAdmin />} />
         <Route path="/super/plantillas/crear" element={<EditorPlantillaSuperAdmin />} />
         <Route path="/super/plantillas/editar/:id" element={<EditorPlantillaSuperAdmin />} />
         <Route path="/super/auditoria" element={<div>Página de Auditoría (Super)</div>} />
-        
         <Route path="/super/empresas" element={<CtrlEmpresas />} />
-        {/* Esta es la única ruta y ahora funcionará */}
         <Route path="/super/usuarios" element={<CtrlUsuarios />} /> 
-        
         <Route path="/super/accesos" element={<SolicitudesAcceso />} />
         <Route path="/super/ayuda" element={<div>Página de Centro de Ayuda</div>} />
       </Route>
@@ -73,12 +69,13 @@ export default function AppRouter() {
         <Route path="/admin/usuarios" element={<div>Página de Mnt. Usuarios (Admin)</div>} />
         <Route path="/admin/areas" element={<div>Página de Mnt. Áreas (Admin)</div>} />
         <Route path="/admin/supervisores" element={<div>Página de Mnt. Supervisores (Admin)</div>} />
-        <Route path="/admin/practicantes" element={<CtrlPracticantes />} />
-        <Route path="/admin/certificados" element={<div>Página de Mnt. Certificados (Admin)</div>} />
         
+        {/* --- CAMBIO AQUÍ --- */}
+        <Route path="/admin/participantes" element={<CtrlParticipantes />} /> {/* Ruta actualizada */}
+
+        <Route path="/admin/certificados" element={<div>Página de Mnt. Certificados (Admin)</div>} />
         <Route path="/admin/plantillas" element={<ListaPlantillasAdmin />} />
         <Route path="/admin/plantillas/personalizar/:id" element={<PersonalizadorPlantillaAdmin />} />
-
         <Route path="/admin/em-certificados" element={<div>Página de Emis. Certificados (Admin)</div>} />
         <Route path="/admin/auditoria" element={<AuditoriaAdmin />} />
         <Route path="/admin/eventos" element={<CtrlEventos />} />
@@ -89,8 +86,11 @@ export default function AppRouter() {
       <Route element={<LayoutEmisor />}>
         <Route path="/emisor" element={<Navigate to="/emisor/dashboard" replace />} />
         <Route path="/emisor/dashboard" element={<DashboardEmisor />} /> 
-        <Route path="/emisor/practicantes" element={<CtrlPracticantesEmisor />} />
-  T     <Route path="/emisor/plantillas" element={<div>Página de Mnt. Plantillas (Emisor)</div>} />
+
+        {/* --- CAMBIO AQUÍ --- */}
+        <Route path="/emisor/participantes" element={<CtrlParticipantesEmisor />} /> {/* Ruta actualizada */}
+
+        <Route path="/emisor/plantillas" element={<div>Página de Mnt. Plantillas (Emisor)</div>} />
         <Route path="/emisor/em-certificados" element={<div>Página de Emisión de Certificados (Emisor)</div>} />
         <Route path="/emisor/eventos" element={<CtrlEventosEmisor />} />
         <Route path="/emisor/ayuda" element={<div>Página de Centro de Ayuda (Emisor)</div>} />
