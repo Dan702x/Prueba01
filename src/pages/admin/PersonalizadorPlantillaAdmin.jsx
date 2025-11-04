@@ -1,6 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeftIcon, PhotoIcon, PencilSquareIcon, IdentificationIcon, ArrowUpOnSquareIcon, PaintBrushIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { 
+    ArrowLeftIcon, 
+    PhotoIcon, 
+    PencilSquareIcon, 
+    IdentificationIcon, 
+    ArrowUpOnSquareIcon, 
+    PaintBrushIcon, 
+    SparklesIcon,
+    ClipboardIcon // <-- 1. ÍCONO IMPORTADO
+} from '@heroicons/react/24/outline';
 
 // DATOS MOCK
 const plantillaData = {
@@ -31,6 +40,23 @@ const plantillaData = {
     ]
   }
 };
+
+// --- 2. LISTA DE VARIABLES (BASADA EN ESTA PLANTILLA) ---
+const VARIABLES_DISPONIBLES_ADMIN = [
+    { nombre: 'Nombre Completo', variable: '{{nombre_completo}}' },
+    { nombre: 'Calidad Participación', variable: '{{calidad_participacion}}' },
+    { nombre: 'Nombre Evento', variable: '{{nombre_evento}}' },
+    { nombre: 'Fecha Inicio', variable: '{{fecha_inicio}}' },
+    { nombre: 'Fecha Fin', variable: '{{fecha_fin}}' },
+    { nombre: 'Duración', variable: '{{duracion}}' },
+    { nombre: 'Lugar Evento', variable: '{{lugar_evento}}' },
+    { nombre: 'Fecha Emisión Larga', variable: '{{fecha_emision_larga}}' },
+    { nombre: 'ID Certificado', variable: '{{id_certificado}}' },
+    { nombre: 'Firmante 1 Nombre', variable: '{{firmante_1_nombre}}' },
+    { nombre: 'Firmante 1 Cargo', variable: '{{firmante_1_cargo}}' },
+    { nombre: 'Firmante 2 Nombre', variable: '{{firmante_2_nombre}}' },
+    { nombre: 'Firmante 2 Cargo', variable: '{{firmante_2_cargo}}' },
+];
 
 // COMPONENTE DE ESTILOS DINÁMICOS
 const DynamicStyles = ({ styles }) => (
@@ -78,6 +104,12 @@ export default function PersonalizadorPlantillaAdmin() {
   const [secondaryColor, setSecondaryColor] = useState('#1f2937');
   const [customFondo, setCustomFondo] = useState(null);
   const [customFondoName, setCustomFondoName] = useState('Subir fondo personalizado');
+
+  // --- 3. FUNCIÓN PARA COPIAR VARIABLES ---
+  const copiarVariable = (variable) => {
+    navigator.clipboard.writeText(variable);
+    alert(`"${variable}" copiado al portapapeles.`);
+  };
 
   // MANEJADORES DE EVENTOS
   const handleFileChange = (e, setter, nameSetter = null, defaultName = '') => {
@@ -244,6 +276,7 @@ export default function PersonalizadorPlantillaAdmin() {
         
         {/* --- PANEL DE CONTENIDO (IZQUIERDA) --- */}
         <aside className="lg:col-span-1 space-y-6 h-fit sticky top-6">
+          
           {/* Panel de Archivos */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-6 border-b pb-2 text-gray-700">Archivos</h2>
@@ -277,6 +310,7 @@ export default function PersonalizadorPlantillaAdmin() {
               )}
             </div>
           </div>
+          
           {/* Panel de Textos */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <div className="flex justify-between items-center mb-4">
@@ -303,6 +337,35 @@ export default function PersonalizadorPlantillaAdmin() {
               </div>
             </div>
           </div>
+
+          {/* --- 4. NUEVO PANEL DE VARIABLES --- */}
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h4 className="text-xl font-bold text-gray-700 mb-3 flex items-center gap-2">
+              <ClipboardIcon className="w-5 h-5 text-green-600" />
+              Variables Disponibles
+            </h4>
+            <p className="text-sm text-gray-600 mb-3">
+              Clic para copiar la variable. Puedes pegarlas en los campos de texto de arriba.
+            </p>
+            
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {VARIABLES_DISPONIBLES_ADMIN.map((variable) => (
+                <button
+                  key={variable.variable}
+                  onClick={() => copiarVariable(variable.variable)}
+                  className="w-full flex items-center justify-between p-2 text-sm border border-gray-200 rounded hover:bg-gray-50 transition-colors group"
+                >
+                  <span className="text-gray-700 group-hover:text-gray-900">
+                    {variable.nombre}
+                  </span>
+                  <code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                    {variable.variable}
+                  </code>
+                </button>
+              ))}
+            </div>
+          </div>
+
         </aside>
         
         {/* --- VISTA PREVIA (DERECHA) --- */}
