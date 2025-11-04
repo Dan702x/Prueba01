@@ -70,11 +70,14 @@ export default function AppRouter() {
         <Route path="/admin/areas" element={<div>Página de Mnt. Áreas (Admin)</div>} />
         <Route path="/admin/supervisores" element={<div>Página de Mnt. Supervisores (Admin)</div>} />
         
-        {/* --- CAMBIO AQUÍ --- */}
-        <Route path="/admin/participantes" element={<CtrlParticipantes />} /> {/* Ruta actualizada */}
+        <Route path="/admin/participantes" element={<CtrlParticipantes />} /> 
 
         <Route path="/admin/certificados" element={<div>Página de Mnt. Certificados (Admin)</div>} />
         <Route path="/admin/plantillas" element={<ListaPlantillasAdmin />} />
+        
+        {/* --- NUEVA RUTA AÑADIDA --- */}
+        <Route path="/admin/plantillas/crear" element={<PersonalizadorPlantillaAdmin />} />
+        
         <Route path="/admin/plantillas/personalizar/:id" element={<PersonalizadorPlantillaAdmin />} />
         <Route path="/admin/em-certificados" element={<div>Página de Emis. Certificados (Admin)</div>} />
         <Route path="/admin/auditoria" element={<AuditoriaAdmin />} />
@@ -86,10 +89,7 @@ export default function AppRouter() {
       <Route element={<LayoutEmisor />}>
         <Route path="/emisor" element={<Navigate to="/emisor/dashboard" replace />} />
         <Route path="/emisor/dashboard" element={<DashboardEmisor />} /> 
-
-        {/* --- CAMBIO AQUÍ --- */}
-        <Route path="/emisor/participantes" element={<CtrlParticipantesEmisor />} /> {/* Ruta actualizada */}
-
+        <Route path="/emisor/participantes" element={<CtrlParticipantesEmisor />} /> 
         <Route path="/emisor/plantillas" element={<div>Página de Mnt. Plantillas (Emisor)</div>} />
         <Route path="/emisor/em-certificados" element={<div>Página de Emisión de Certificados (Emisor)</div>} />
         <Route path="/emisor/eventos" element={<CtrlEventosEmisor />} />
