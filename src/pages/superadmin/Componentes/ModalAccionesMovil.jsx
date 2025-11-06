@@ -6,7 +6,14 @@ import {
   TrashIcon, 
 } from "@heroicons/react/24/solid";
 
-export default function ModalAccionesMovil({ usuario, onClose, onEdit, onDelete, onResetPass }) {
+export default function ModalAccionesMovil({ 
+  usuario, 
+  onClose, 
+  onEdit, 
+  onDelete, 
+  onResetPass,
+  showEliminar = true
+}) {
   return (
     <div 
       className="cu-modal-movil-backdrop"
@@ -40,10 +47,12 @@ export default function ModalAccionesMovil({ usuario, onClose, onEdit, onDelete,
             Editar Usuario y Estado
           </button>
           
-          <button onClick={onDelete} className="cu-modal-movil-btn-delete">
-            <TrashIcon className="w-5 h-5" />
-            Eliminar Usuario
-          </button>
+          {showEliminar && (
+            <button onClick={onDelete} className="cu-modal-movil-btn-delete">
+              <TrashIcon className="w-5 h-5" />
+              Eliminar Usuario
+            </button>
+          )}
         </div>
       </div>
     </div>

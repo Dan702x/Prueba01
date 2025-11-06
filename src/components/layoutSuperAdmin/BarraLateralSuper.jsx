@@ -7,17 +7,13 @@ export default function BarraLateralSuper({
   items = [],
   helpItem,
   isCollapsed,
-  onToggleSidebar, // ✅ Prop para la función de cerrar el sidebar
+  onToggleSidebar,
 }) {
   const sidebarRef = useRef(null);
 
-  // ✅ Función auxiliar para cerrar el sidebar en móvil
   const handleLinkClick = () => {
-    // Solo cerramos el sidebar si NO está colapsado (es decir, está abierto en móvil)
-    // y si la pantalla es pequeña (para no afectar el modo escritorio)
     if (!isCollapsed && onToggleSidebar) {
-      // Usamos window.innerWidth para chequear si es móvil
-      if (window.innerWidth < 768) { // 768px es el breakpoint 'md' de Tailwind por defecto
+      if (window.innerWidth < 768) {
         onToggleSidebar();
       }
     }
@@ -111,14 +107,14 @@ export default function BarraLateralSuper({
         </div>
       </div>
 
-      <nav className="flex-1 mt-5">
+      <nav className="flex-1 mt-2.5">
         <ul>
           {items.map((item, index) => (
             <li key={index} className="mb-2">
               <NavLink
                 to={item.to}
                 className={getLinkClasses}
-                onClick={handleLinkClick} // ✅ Llamada a la función
+                onClick={handleLinkClick}
               >
                 {({ isActive }) =>
                   renderNavItem({
@@ -139,7 +135,7 @@ export default function BarraLateralSuper({
             <NavLink
               to={helpItem.to}
               className={getLinkClasses}
-              onClick={handleLinkClick} // ✅ Llamada a la función
+              onClick={handleLinkClick}
             >
               {({ isActive }) =>
                 renderNavItem({

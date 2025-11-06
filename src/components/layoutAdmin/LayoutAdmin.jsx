@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; 
 import { Outlet } from 'react-router-dom';
-import BarraSuperiorAdmin from './BarraSuperiorAdmin'; 
-import BarraLateralAdmin from './BarraLateralAdmin';   
+import BarraSuperiorAdmin from '../layoutAdmin/BarraSuperiorAdmin.jsx'; 
+import BarraLateralAdmin from '../layoutSuperAdmin/BarraLateralSuper.jsx';   
 import logoCertify from '../../assets/logo.png'; 
 import {
   HomeIcon, UsersIcon, RectangleStackIcon, 
@@ -15,7 +15,7 @@ const iconClass = "w-6 h-6";
 
 export default function LayoutAdmin() { 
   
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);

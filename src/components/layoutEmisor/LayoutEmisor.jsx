@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; 
 import { Outlet } from 'react-router-dom';
-import BarraSuperiorEmisor from './BarraSuperiorEmisor'; 
-import BarraLateralEmisor from './BarraLateralEmisor';   
+import BarraSuperiorEmisor from '../layoutEmisor/BarraSuperiorEmisor'; 
+import BarraLateralEmisor from '../layoutSuperAdmin/BarraLateralSuper';   
 import logoCertify from '../../assets/logo.png'; 
 import {
   HomeIcon, 
@@ -17,7 +17,7 @@ const iconClass = "w-6 h-6";
 
 export default function LayoutEmisor() { 
   
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);

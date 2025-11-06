@@ -2,17 +2,18 @@ import React from "react";
 import { CalendarIcon, XMarkIcon as CloseIcon } from "@heroicons/react/24/solid";
 
 const CustomDateInput = React.forwardRef(
-  ({ value, onClick, onChange, placeholder, onClear }, ref) => (
+  ({ value, onClick, onChange, placeholder, onClear, inputClassName = "" }, ref) => (
     <div className="relative my-1">
       <input
         type="text"
-        className="w-full pl-8 pr-10 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm"
+        className={`w-full pl-8 pr-10 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm ${inputClassName}`}
         value={value}
         placeholder={placeholder}
         onClick={onClick}
         onChange={onChange}
         ref={ref}
         autoComplete="off"
+        readOnly 
       />
       <CalendarIcon className="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
       {value && (

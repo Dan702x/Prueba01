@@ -6,6 +6,8 @@ export default function TarjetaEstadistica({ label, value, icon, color = "blue" 
     green: { bg: "bg-green-100", text: "text-green-600" },
     red: { bg: "bg-red-100", text: "text-red-600" },
     gray: { bg: "bg-gray-100", text: "text-gray-600" },
+    // --- Añadimos esta línea ---
+    yellow: { bg: "bg-yellow-100", text: "text-yellow-600" },
   };
   const selectedColor = colorClasses[color] || colorClasses.blue;
 

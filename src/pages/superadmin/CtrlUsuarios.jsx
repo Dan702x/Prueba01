@@ -10,18 +10,30 @@ import {
   PlusIcon,
   XMarkIcon as CloseIcon,
   EnvelopeIcon,
-  TrashIcon,
+  ArrowDownTrayIcon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/solid";
 
 import TarjetaEstadistica from "../../components/common/TarjetaEstadistica";
 import InputFiltro from "../../components/common/InputFiltro";
+import NotificacionExito from "../../components/common/NotificacionExito";
+
+import UsuariosTable from "../superadmin/Componentes/UsuariosTable";
+
 import ModalCrearUsuario from "../superadmin/Componentes/ModalCrearUsuario";
 import ModalEditarUsuario from "../superadmin/Componentes/ModalEditarUsuario";
-import ModalEliminarUsuario from "../superadmin/Componentes/ModalEliminarUsuario";
 import ModalResetPass from "../superadmin/Componentes/ModalResetPass";
 import ModalAccionesMovil from "../superadmin/Componentes/ModalAccionesMovil";
 
 import "../../Styles/CtrlUsuarios.css";
+
+import CustomDateInput from "../../components/common/CustomDateImput";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../../Styles/datapicker.css";
+import DatePickerHeader from "../../components/common/DatePickerHeader";
+
+import { exportUsuariosToExcel } from "../../utils/ExcelService";
 
 const usuariosIniciales = [
   {
@@ -45,9 +57,32 @@ const usuariosIniciales = [
     rol: "Super Admin",
     estado: "Inactivo",
   },
+  {
+    id: 4,
+    nombre: "Pedro Castillo",
+    email: "p.castillo@chota.pe",
+    rol: "Super Admin",
+    estado: "Inactivo",
+  },
+  {
+    id: 5,
+    nombre: "Alan Garcia",
+    email: "a.garcia@presidencia.pe",
+    rol: "Super Admin",
+    estado: "Activo",
+  },
 ];
 
 const opcionesEstado = ["Todos", "Activo", "Inactivo"];
+
+const FiltroWrapper = ({ label, children, className = "" }) => (
+  <div className={`w-full ${className}`}>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    {children}
+  </div>
+);
 
 export default function CtrlUsuarios() {
   const [usuarios, setUsuarios] = useState(usuariosIniciales);
@@ -65,7 +100,6 @@ export default function CtrlUsuarios() {
 
   const [modalCrearVisible, setModalCrearVisible] = useState(false);
   const [modalEditarVisible, setModalEditarVisible] = useState(false);
-  const [modalEliminarVisible, setModalEliminarVisible] = useState(false);
   const [modalResetPassVisible, setModalResetPassVisible] = useState(false);
   const [modalAccionesVisible, setModalAccionesVisible] = useState(false);
   const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
@@ -102,6 +136,16 @@ export default function CtrlUsuarios() {
   const seleccionarEstadoDropdown = (estado) => {
     handleFiltroColumna("estado", estado);
     setDropdownEstadoAbierto(false);
+  };
+  
+  // --- NUEVA FUNCIÓN LIMPIAR ---
+  const limpiarTodosLosFiltros = () => {
+    setFiltrosColumna({
+      nombre: "",
+      email: "",
+      estado: "Todos",
+    });
+    setPaginaActual(1);
   };
 
   const usuariosFiltrados = useMemo(() => {
@@ -160,12 +204,10 @@ export default function CtrlUsuarios() {
     setModalCrearVisible(false);
     triggerSuccessToast("Usuario creado con éxito.");
   };
-
   const handleEditarClick = (usuario) => {
     setUsuarioSeleccionado(usuario);
     setModalEditarVisible(true);
   };
-
   const handleSubmitEditarUsuario = (formData) => {
     setUsuarios((prevUsuarios) =>
       prevUsuarios.map((user) =>
@@ -176,244 +218,164 @@ export default function CtrlUsuarios() {
     setUsuarioSeleccionado(null);
     triggerSuccessToast("Usuario actualizado con éxito.");
   };
-
-  const handleEliminarClick = (usuario) => {
-    setUsuarioSeleccionado(usuario);
-    setModalEliminarVisible(true);
-  };
-
-  const handleConfirmEliminar = () => {
-    setUsuarios((prevUsuarios) =>
-      prevUsuarios.filter((user) => user.id !== usuarioSeleccionado.id)
-    );
-    setModalEliminarVisible(false);
-    setUsuarioSeleccionado(null);
-    triggerSuccessToast("Usuario eliminado permanentemente.");
-  };
-
+  
   const handleResetPasswordClick = (usuario) => {
     setUsuarioSeleccionado(usuario);
     setModalResetPassVisible(true);
   };
-
   const handleConfirmResetPassword = () => {
     console.log("Simulando envío de reseteo a:", usuarioSeleccionado.email);
     setModalResetPassVisible(false);
     setUsuarioSeleccionado(null);
     triggerSuccessToast("Enlace de reseteo enviado con éxito.");
   };
-
   const handleRowClick = (usuario) => {
     if (window.innerWidth < 768) {
       setUsuarioSeleccionado(usuario);
       setModalAccionesVisible(true);
     }
   };
+  
+  const handleDownloadExcel = async () => {
+    exportUsuariosToExcel(usuariosFiltrados, filtrosColumna);
+  };
 
   return (
-    <div className="cu-container">
-      <div className="cu-header">
-        <h1 className="cu-titulo">Control de Usuarios</h1>
-        <button
-          onClick={() => setModalCrearVisible(true)}
-          className="hidden md:inline-flex items-center gap-2 px-4 py-2 font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500"
-        >
-          <PlusIcon className="w-5 h-5" />
-          Registrar Nuevo Usuario
-        </button>
-      </div>
-
-      <div className="cu-stats-grid">
-        <TarjetaEstadistica
-          label="Total Super Admins"
-          value={estadisticasFiltradas.total}
-          icon={<UserGroupIcon className="w-6 h-6" />}
-          color="blue"
-        />
-        <TarjetaEstadistica
-          label="Activos"
-          value={estadisticasFiltradas.activos}
-          icon={<CheckCircleIcon className="w-6 h-6" />}
-          color="green"
-        />
-        <TarjetaEstadistica
-          label="Inactivos"
-          value={estadisticasFiltradas.inactivos}
-          icon={<XCircleIcon className="w-6 h-6" />}
-          color="gray"
-        />
-      </div>
-
-      <div className="tabla-wrapper">
-        <div className="tabla-container">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="tabla-header-celda">
-                  Usuario
-                </th>
-                <th
-                  scope="col"
-                  className="tabla-header-celda hidden md:table-cell"
-                >
-                  Email
-                </th>
-                <th scope="col" className="tabla-header-celda">
-                  Estado
-                </th>
-                <th
-                  scope="col"
-                  className="tabla-header-celda hidden md:table-cell"
-                >
-                  <div className="text-right pr-12">Acciones</div>
-                </th>
-              </tr>
-
-              <tr className="bg-gray-50 border-t border-gray-200">
-                <th className="tabla-header-celda-filtro">
-                  <InputFiltro
-                    value={filtrosColumna.nombre}
-                    onChange={(e) =>
-                      handleFiltroColumna("nombre", e.target.value)
-                    }
-                    placeholder="Buscar por nombre..."
-                  />
-                </th>
-                <th className="tabla-header-celda-filtro hidden md:table-cell">
-                  <InputFiltro
-                    value={filtrosColumna.email}
-                    onChange={(e) =>
-                      handleFiltroColumna("email", e.target.value)
-                    }
-                    placeholder="Buscar por email..."
-                  />
-                </th>
-                <th
-                  className="tabla-header-celda-filtro relative"
-                  ref={dropdownEstadoRef}
-                >
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDropdownEstadoAbierto(!dropdownEstadoAbierto);
-                    }}
-                    className="filtro-dropdown-btn"
-                  >
-                    {filtrosColumna.estado}
-                    <ChevronDownIcon
-                      className="-mr-1 ml-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </button>
-                  {dropdownEstadoAbierto && (
-                    <div className="filtro-dropdown-menu">
-                      <div className="py-1">
-                        {opcionesEstado.map((opcion) => (
-                          <button
-                            key={opcion}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              seleccionarEstadoDropdown(opcion);
-                            }}
-                            className={`filtro-dropdown-item ${
-                              filtrosColumna.estado === opcion
-                                ? "bg-gray-100 text-gray-900"
-                                : "text-gray-700"
-                            }`}
-                          >
-                            {opcion}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </th>
-                <th className="tabla-header-celda-filtro hidden md:table-cell"></th>
-              </tr>
-            </thead>
-
-            <tbody className="bg-white divide-y divide-gray-200">
-              {usuariosPaginados.length > 0 ? (
-                usuariosPaginados.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="tabla-body-fila"
-                    onClick={() => handleRowClick(user)}
-                  >
-                    <td className="tabla-body-celda">
-                      <div className="text-sm font-medium text-gray-900">
-                        {user.nombre}
-                      </div>
-                      <div className="text-sm text-gray-500 md:hidden">
-                        {user.email}
-                      </div>
-                    </td>
-                    <td className="tabla-body-celda hidden md:table-cell">
-                      <div className="text-sm text-gray-500">{user.email}</div>
-                    </td>
-                    <td className="tabla-body-celda">
-                      {user.estado === "Activo" && (
-                        <span className="badge-activo">Activo</span>
-                      )}
-                      {user.estado === "Inactivo" && (
-                        <span className="badge-inactivo">Inactivo</span>
-                      )}
-                    </td>
-                    <td className="tabla-body-celda text-right hidden md:table-cell">
-                      <div className="space-x-2">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleResetPasswordClick(user);
-                          }}
-                          className="btn-accion-reset"
-                          title="Enviar nueva contraseña"
-                        >
-                          <EnvelopeIcon className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditarClick(user);
-                          }}
-                          className="btn-accion-editar"
-                          title="Editar Usuario y Estado"
-                        >
-                          <PencilIcon className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEliminarClick(user);
-                          }}
-                          className="btn-accion-eliminar"
-                          title="Eliminar Usuario"
-                        >
-                          <TrashIcon className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="cu-no-results-cell">
-                    No se encontraron usuarios con los filtros aplicados.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+    <div className="p-0"> 
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Control de Usuarios</h1>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setModalCrearVisible(true)}
+            className="hidden md:inline-flex items-center gap-2 px-4 py-2 font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500"
+          >
+            <PlusIcon className="w-5 h-5" />
+            Registrar Usuario
+          </button>
+          <button
+            onClick={handleDownloadExcel}
+            className="hidden md:flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <ArrowDownTrayIcon className="w-5 h-5" />
+            Descargar Excel
+          </button>
         </div>
       </div>
 
+      <div className="bg-white p-4 rounded-lg shadow-sm mb-4 flex flex-col">
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <TarjetaEstadistica
+            label="Total Super Admins"
+            value={estadisticasFiltradas.total}
+            icon={<UserGroupIcon className="w-6 h-6" />}
+            color="blue"
+          />
+          <TarjetaEstadistica
+            label="Activos"
+            value={estadisticasFiltradas.activos}
+            icon={<CheckCircleIcon className="w-6 h-6" />}
+            color="green"
+          />
+          <TarjetaEstadistica
+            label="Inactivos"
+            value={estadisticasFiltradas.inactivos}
+            icon={<XCircleIcon className="w-6 h-6" />}
+            color="gray"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 items-end pt-4">
+          
+          <FiltroWrapper label="Usuario (Nombre)">
+            <InputFiltro
+              value={filtrosColumna.nombre}
+              onChange={(e) =>
+                handleFiltroColumna("nombre", e.target.value)
+              }
+              placeholder="Buscar por nombre..."
+            />
+          </FiltroWrapper>
+
+          <FiltroWrapper label="Email">
+            <InputFiltro
+              value={filtrosColumna.email}
+              onChange={(e) =>
+                handleFiltroColumna("email", e.target.value)
+              }
+              placeholder="Buscar por email..."
+            />
+          </FiltroWrapper>
+
+          <FiltroWrapper label="Estado">
+            <div className="relative my-1" ref={dropdownEstadoRef}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDropdownEstadoAbierto(!dropdownEstadoAbierto);
+                }}
+                className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                {filtrosColumna.estado}
+                <ChevronDownIcon
+                  className="-mr-1 ml-2 h-5 w-5"
+                  aria-hidden="true"
+                />
+              </button>
+              {dropdownEstadoAbierto && (
+                <div className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+                  <div className="py-1">
+                    {opcionesEstado.map((opcion) => (
+                      <button
+                        key={opcion}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          seleccionarEstadoDropdown(opcion);
+                        }}
+                        className={`${
+                          filtrosColumna.estado === opcion
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-700"
+                        } block w-full text-left px-4 py-2 text-sm hover:bg-gray-100`}
+                      >
+                        {opcion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </FiltroWrapper>
+        </div>
+
+        <hr className="my-4 border-gray-200" />
+
+        <div className="flex justify-end">
+          <button
+            onClick={limpiarTodosLosFiltros}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <ArrowPathIcon className="w-5 h-5" />
+            Limpiar
+          </button>
+        </div>
+      </div>
+
+      <UsuariosTable
+        usuariosPaginados={usuariosPaginados}
+        onRowClick={handleRowClick}
+        onEditarClick={handleEditarClick}
+        onResetPasswordClick={handleResetPasswordClick}
+        showEliminar={false}
+      />
+
       {totalPaginas > 1 && (
-        <div className="cu-paginacion-contenedor">
+        <div className="flex justify-center items-center gap-4 pt-6">
           <button
             onClick={() => cambiarPagina(paginaActual - 1)}
             disabled={paginaActual === 1}
-            className="btn-paginacion"
+            className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeftIcon className="h-5 w-5" /> Anterior
           </button>
@@ -423,20 +385,27 @@ export default function CtrlUsuarios() {
           <button
             onClick={() => cambiarPagina(paginaActual + 1)}
             disabled={paginaActual === totalPaginas}
-            className="btn-paginacion"
+            className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Siguiente <ChevronRightIcon className="h-5 w-5" />
           </button>
         </div>
       )}
 
-      <div className="mt-6 md:hidden">
+      <div className="mt-6 md:hidden flex flex-col gap-2">
         <button
           onClick={() => setModalCrearVisible(true)}
           className="flex w-full justify-center items-center gap-2 px-4 py-3 font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500"
         >
           <PlusIcon className="w-5 h-5" />
           Registrar Nuevo Usuario
+        </button>
+        <button
+          onClick={handleDownloadExcel}
+          className="flex w-full items-center justify-center gap-2 px-4 py-3 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          <ArrowDownTrayIcon className="w-5 h-5" />
+          Descargar Excel
         </button>
       </div>
 
@@ -458,14 +427,6 @@ export default function CtrlUsuarios() {
         />
       )}
 
-      {modalEliminarVisible && usuarioSeleccionado && (
-        <ModalEliminarUsuario
-          usuario={usuarioSeleccionado}
-          onClose={() => setModalEliminarVisible(false)}
-          onConfirm={handleConfirmEliminar}
-        />
-      )}
-
       {modalResetPassVisible && usuarioSeleccionado && (
         <ModalResetPass
           usuario={usuarioSeleccionado}
@@ -482,31 +443,19 @@ export default function CtrlUsuarios() {
             setModalAccionesVisible(false);
             handleEditarClick(usuarioSeleccionado);
           }}
-          onDelete={() => {
-            setModalAccionesVisible(false);
-            handleEliminarClick(usuarioSeleccionado);
-          }}
           onResetPass={() => {
             setModalAccionesVisible(false);
             handleResetPasswordClick(usuarioSeleccionado);
           }}
+          showEliminar={false}
         />
       )}
 
-      {showSuccessToast && (
-        <div className="cu-toast-wrapper">
-          <div className="cu-toast-panel">
-            <CheckCircleIcon className="cu-toast-icon" />
-            <p className="cu-toast-msg">{toastMessage}</p>
-            <button
-              onClick={() => setShowSuccessToast(false)}
-              className="cu-toast-close-btn"
-            >
-              <CloseIcon className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+      <NotificacionExito
+        message={toastMessage}
+        show={showSuccessToast}
+        onClose={() => setShowSuccessToast(false)}
+      />
     </div>
   );
 }

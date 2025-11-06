@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
   XMarkIcon as CloseIcon,
   ChevronLeftIcon,
@@ -7,17 +7,27 @@ import {
   ArrowDownTrayIcon,
   CheckCircleIcon,
   XCircleIcon,
+  ChevronDownIcon, 
+  ArrowPathIcon,
 } from "@heroicons/react/24/solid";
 import ExcelJS from "exceljs";
 
 import TarjetaEstadistica from "../../components/common/TarjetaEstadistica";
-import CustomDateInput from "../../components/common/CustomDateImput"; 
+import CustomDateInput from "../../components/common/CustomDateImput";
 import InputFiltro from "../../components/common/InputFiltro"; 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "../../Styles/datapicker.css";
+import DatePickerHeader from "../../components/common/DatePickerHeader";
+
+import { exportEmpresasToExcel } from "../../utils/ExcelService"; 
+
 import EmpresasTable from "../superadmin/Componentes/EmpresasTable";
 import ModalEditarEmpresa from "../superadmin/Componentes/ModalEditarEmpresa";
 import ModalEliminarEmpresa from "../superadmin/Componentes/ModalEliminarEmpresa";
 import ModalResetPassEmpresa from "../superadmin/Componentes/ModalResetPassEmpresa";
 import ModalAccionesEmpresa from "../superadmin/Componentes/ModalAccionesEmpresa";
+import NotificacionExito from "../../components/common/NotificacionExito";
 
 const empresasIniciales = [
   {
@@ -40,41 +50,64 @@ const empresasIniciales = [
     fechaAprobacion: "17/10/2025",
     estadoEmpresa: "Activo",
   },
+  {
+    id: 8,
+    nombreContacto: "Juan Diego Recra",
+    emailContacto: "jd.recra@lawrence.com",
+    empresa: "Lawrence EIRL",
+    razonSocial: "Lawrence Asesores SAC",
+    ruc: "20777888999",
+    fechaAprobacion: "15/10/2025",
+    estadoEmpresa: "Inactivo",
+  },
+  {
+    id: 9,
+    nombreContacto: "Joaquin Tumba",
+    emailContacto: "j.tumba@finanzas.com",
+    empresa: "Finanzas Murillo",
+    razonSocial: "JTM Consultores",
+    ruc: "20112233445",
+    fechaAprobacion: "12/10/2025",
+    estadoEmpresa: "Activo",
+  },
+  {
+    id: 10,
+    nombreContacto: "Roy Silva",
+    emailContacto: "r.silva@sistemas.com",
+    empresa: "RSQ Tech",
+    razonSocial: "RSQ Tech SAC",
+    ruc: "20556677889",
+    fechaAprobacion: "10/10/2025",
+    estadoEmpresa: "Activo",
+  },
 ];
 
-function SuccessToast({ message, show, onClose }) {
-  if (!show) return null;
-  return (
-    <div className="fixed top-5 right-5 z-50 animate-slide-in-right">
-      <div className="max-w-sm w-full bg-green-500 text-white rounded-md shadow-lg flex items-center p-4">
-        <CheckCircleIcon className="w-6 h-6 mr-3" />
-        <p className="flex-1 text-sm font-medium">{message}</p>
-        <button
-          onClick={onClose}
-          className="ml-3 p-1 rounded-md hover:bg-green-600 focus:outline-none"
-        >
-          <CloseIcon className="w-4 h-4" />
-        </button>
-      </div>
-    </div>
-  );
-}
+const FiltroWrapper = ({ label, children, className = "" }) => (
+  <div className={`w-full ${className}`}>
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    {children}
+  </div>
+);
 
 export default function CtrlEmpresas() {
   const [empresas, setEmpresas] = useState(empresasIniciales);
 
   const [filtrosColumna, setFiltrosColumna] = useState({
     contacto: "",
-    empresa: "",
-    razonRuc: "",
+    busquedaEmpresa: "",
     estadoEmpresa: "Todos",
   });
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaFin, setFechaFin] = useState(null);
   const [paginaActual, setPaginaActual] = useState(1);
-  const [elementosPorPagina] = useState(1);
+  const [elementosPorPagina] = useState(3);
 
-  // --- ESTADOS DE MODALES ---
+  const [dropdownAbierto, setDropdownAbierto] = useState(false);
+  const dropdownRef = useRef(null);
+  const opcionesEstado = ["Todos", "Activo", "Inactivo"];
+
   const [modalFormVisible, setModalFormVisible] = useState(false);
   const [modalEliminarVisible, setModalEliminarVisible] = useState(false);
   const [modalResetPassVisible, setModalResetPassVisible] = useState(false);
@@ -120,6 +153,32 @@ export default function CtrlEmpresas() {
     setFechaFin(null);
     setPaginaActual(1);
   };
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownAbierto(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  
+  const seleccionarEstadoDropdown = (estado) => {
+    handleFiltroColumna("estadoEmpresa", estado);
+    setDropdownAbierto(false);
+  };
+
+  const limpiarTodosLosFiltros = () => {
+    setFiltrosColumna({
+      contacto: "",
+      busquedaEmpresa: "",
+      estadoEmpresa: "Todos",
+    });
+    setFechaInicio(null);
+    setFechaFin(null);
+    setPaginaActual(1);
+  };
 
   const empresasFiltradas = useMemo(() => {
     return empresas.filter((s) => {
@@ -130,25 +189,23 @@ export default function CtrlEmpresas() {
         !s.emailContacto.toLowerCase().includes(filtroContactoLower)
       )
         return false;
-      const filtroEmpresaLower = filtrosColumna.empresa.toLowerCase();
+      
+      const filtroEmpresaLower = filtrosColumna.busquedaEmpresa.toLowerCase();
       if (
-        filtrosColumna.empresa &&
-        !s.empresa.toLowerCase().includes(filtroEmpresaLower)
+        filtrosColumna.busquedaEmpresa &&
+        !s.empresa.toLowerCase().includes(filtroEmpresaLower) &&
+        !s.razonSocial.toLowerCase().includes(filtroEmpresaLower) &&
+        !s.ruc.toLowerCase().includes(filtroEmpresaLower)
       )
         return false;
-      const filtroRazonRucLower = filtrosColumna.razonRuc.toLowerCase();
-      if (
-        filtrosColumna.razonRuc &&
-        !s.razonSocial.toLowerCase().includes(filtroRazonRucLower) &&
-        !s.ruc.toLowerCase().includes(filtroRazonRucLower)
-      )
-        return false;
+      
       if (
         filtrosColumna.estadoEmpresa !== "Todos" &&
         s.estadoEmpresa !== filtrosColumna.estadoEmpresa
       ) {
         return false;
       }
+      
       if (fechaInicio && fechaFin) {
         const [dia, mes, anio] = s.fechaAprobacion.split("/").map(Number);
         const fechaSolicitud = new Date(anio, mes - 1, dia);
@@ -196,7 +253,6 @@ export default function CtrlEmpresas() {
       setModalAccionesVisible(true);
     }
   };
-
   const handleEditarClick = (empresa) => {
     setEmpresaSeleccionada(empresa);
     setFormData({
@@ -206,17 +262,14 @@ export default function CtrlEmpresas() {
     });
     setModalFormVisible(true);
   };
-
   const handleEliminarClick = (empresa) => {
     setEmpresaSeleccionada(empresa);
     setModalEliminarVisible(true);
   };
-
   const handleResetPasswordClick = (empresa) => {
     setEmpresaSeleccionada(empresa);
     setModalResetPassVisible(true);
   };
-  
   const handleCloseModalAcciones = () => setModalAccionesVisible(false);
   const handleCloseModalForm = () => setModalFormVisible(false);
   const handleCloseModalEliminar = () => setModalEliminarVisible(false);
@@ -232,26 +285,28 @@ export default function CtrlEmpresas() {
     handleCloseModalForm();
     triggerSuccessToast("Empresa actualizada con éxito.");
   };
-
   const handleConfirmEliminar = () => {
     setEmpresas(empresas.filter((emp) => emp.id !== empresaSeleccionada.id));
     handleCloseModalEliminar();
     triggerSuccessToast("Empresa eliminada permanentemente.");
   };
-  
   const handleConfirmResetPassword = () => {
     console.log("Simulando envío de reseteo a:", empresaSeleccionada.emailContacto);
     handleCloseModalResetPass();
     triggerSuccessToast("Nueva contraseña enviada con éxito.");
   };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleDownloadExcel = async () => {
-    console.log("Descargando Excel...");
+    exportEmpresasToExcel(
+      empresasFiltradas,
+      filtrosColumna,
+      fechaInicio,
+      fechaFin
+    );
   };
 
   return (
@@ -271,20 +326,100 @@ export default function CtrlEmpresas() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        <TarjetaEstadistica label="Total Empresas (Filtradas)" value={estadisticasFiltradas.total} icon={<DocumentTextIcon className="w-6 h-6" />} color="blue" />
-        <TarjetaEstadistica label="Activas" value={estadisticasFiltradas.activas} icon={<CheckCircleIcon className="w-6 h-6" />} color="green" />
-        <TarjetaEstadistica label="Inactivas" value={estadisticasFiltradas.inactivas} icon={<XCircleIcon className="w-6 h-6" />} color="gray" />
+      <div className="bg-white p-4 rounded-lg shadow-sm mb-4 flex flex-col">
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+          <div className="lg:col-span-4">
+            <TarjetaEstadistica label="Total Empresas (Filtradas)" value={estadisticasFiltradas.total} icon={<DocumentTextIcon className="w-6 h-6" />} color="blue" />
+          </div>
+          <div className="lg:col-span-4">
+            <TarjetaEstadistica label="Activas" value={estadisticasFiltradas.activas} icon={<CheckCircleIcon className="w-6 h-6" />} color="green" />
+          </div>
+          <div className="lg:col-span-4">
+            <TarjetaEstadistica label="Inactivas" value={estadisticasFiltradas.inactivas} icon={<XCircleIcon className="w-6 h-6" />} color="gray" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-end pt-4">
+          
+          <FiltroWrapper label="Contacto (Nombre o Email)" className="lg:col-span-3">
+            <InputFiltro
+              value={filtrosColumna.contacto}
+              onChange={(e) => handleFiltroColumna("contacto", e.target.value)}
+              placeholder="Buscar por contacto..."
+            />
+          </FiltroWrapper>
+
+          <FiltroWrapper label="Empresa (Nombre, Razón o RUC)" className="lg:col-span-3">
+            <InputFiltro
+              value={filtrosColumna.busquedaEmpresa}
+              onChange={(e) => handleFiltroColumna("busquedaEmpresa", e.target.value)}
+              placeholder="Buscar por empresa..."
+            />
+          </FiltroWrapper>
+
+          <FiltroWrapper label="Fecha Aprobación" className="lg:col-span-3">
+            <DatePicker
+              selectsRange={true}
+              startDate={fechaInicio}
+              endDate={fechaFin}
+              onChange={handleRangoFechaChange}
+              dateFormat="dd/MM/yy"
+              placeholderText="dd/mm/aa - dd/mm/aa"
+              customInput={<CustomDateInput onClear={limpiarFechas} />}
+              autoComplete="off"
+              renderCustomHeader={(props) => <DatePickerHeader {...props} />}
+            />
+          </FiltroWrapper>
+
+          <FiltroWrapper label="Estado" className="lg:col-span-3">
+            <div className="relative my-1" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setDropdownAbierto(!dropdownAbierto); }}
+                className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                {filtrosColumna.estadoEmpresa}
+                <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+              </button>
+              {dropdownAbierto && (
+                <div className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+                  <div className="py-1">
+                    {opcionesEstado.map((opcion) => (
+                      <button
+                        key={opcion}
+                        onClick={(e) => { e.stopPropagation(); seleccionarEstadoDropdown(opcion); }}
+                        className={`${
+                          filtrosColumna.estadoEmpresa === opcion
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-700"
+                        } block w-full text-left px-4 py-2 text-sm hover:bg-gray-100`}
+                      >
+                        {opcion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </FiltroWrapper>
+        </div>
+
+        <hr className="my-4 border-gray-200" />
+
+        <div className="flex justify-end">
+          <button
+            onClick={limpiarTodosLosFiltros}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <ArrowPathIcon className="w-5 h-5" />
+            Limpiar
+          </button>
+        </div>
       </div>
 
       <EmpresasTable
         empresasPaginadas={empresasPaginadas}
-        filtrosColumna={filtrosColumna}
-        fechaInicio={fechaInicio}
-        fechaFin={fechaFin}
-        onFiltroColumnaChange={handleFiltroColumna}
-        onRangoFechaChange={handleRangoFechaChange}
-        onLimpiarFechas={limpiarFechas}
         onRowClick={handleRowClick}
         onEditarClick={handleEditarClick}
         onEliminarClick={handleEliminarClick}
@@ -345,7 +480,7 @@ export default function CtrlEmpresas() {
         onResetPasswordClick={handleResetPasswordClick}
       />
       
-      <SuccessToast
+      <NotificacionExito
         message={toastMessage}
         show={showSuccessToast}
         onClose={() => setShowSuccessToast(false)}

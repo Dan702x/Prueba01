@@ -109,12 +109,8 @@ export default function DashboardSuper() {
         Inicio/Reportes
       </h1>
 
-      {/* --- BARRA DE FILTROS (MODIFICADA) --- */}
-      {/* Usamos 'lg:flex-row' para que en pantallas grandes sí estén en fila,
-          pero a partir de 'md' los botones de filtrado y exportar se apilen */}
       <div className="flex flex-col lg:flex-row lg:items-end gap-4 mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-200">
         
-        {/* Fecha desde */}
         <div className="w-full md:w-auto">
           <label htmlFor="fechaDesde" className="block text-sm font-medium text-gray-700 mb-1">
             Fecha desde:
@@ -130,7 +126,6 @@ export default function DashboardSuper() {
           </div>
         </div>
 
-        {/* Fecha hasta */}
         <div className="w-full md:w-auto">
           <label htmlFor="fechaHasta" className="block text-sm font-medium text-gray-700 mb-1">
             Fecha hasta:
@@ -146,20 +141,15 @@ export default function DashboardSuper() {
           </div>
         </div>
 
-        {/* CONTENEDOR PARA LOS BOTONES FILTRAR Y EXPORTAR (NUEVA ESTRUCTURA) */}
-        {/* En pantallas md y lg, este contenedor se volverá una columna, apilando los botones */}
-        {/* En pantallas lg y más grandes, 'lg:ml-auto' empujará este grupo a la derecha */}
-        <div className="w-full flex flex-col gap-3 md:w-auto lg:ml-auto lg:flex-row lg:items-center"> {/* Agregamos lg:flex-row y lg:items-center para que en desktop vuelvan a estar en fila */}
-          {/* Botón Filtrar */}
-          <div className="w-full lg:w-auto"> {/* Ocupa todo el ancho en móvil/md, se ajusta en lg */}
+        <div className="w-full flex flex-col gap-3 md:w-auto lg:ml-auto lg:flex-row lg:items-center">
+          <div className="w-full lg:w-auto">
             <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#1E3A8A] text-white font-semibold rounded-lg shadow-md hover:bg-[#1C3274] transition-colors duration-200">
               <FunnelIcon className="h-5 w-5" />
               Filtrar
             </button>
           </div>
 
-          {/* Botón Exportar */}
-          <div className="w-full lg:w-auto"> {/* Ocupa todo el ancho en móvil/md, se ajusta en lg */}
+          <div className="w-full lg:w-auto">
             <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200">
               <ArrowDownTrayIcon className="h-5 w-5" />
               Exportar
@@ -169,7 +159,6 @@ export default function DashboardSuper() {
         </div>
       </div>
 
-      {/* --- Grid de KPIs (sin cambios) --- */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 mb-6">
         <KpiCard title="Total Empresas Activas" value="142" />
         <KpiCard title="Total Certificados Emitidos" value="2,150" />
@@ -178,7 +167,6 @@ export default function DashboardSuper() {
         <KpiCard title="Nuevas Empresas (30d)" value="12" />
       </div>
 
-      {/* --- Grid de Contenido Principal (sin cambios) --- */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <div className="lg:col-span-2 flex flex-col gap-6">

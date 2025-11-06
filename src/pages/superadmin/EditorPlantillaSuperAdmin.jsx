@@ -136,9 +136,8 @@ export default function EditorPlantillaSuperAdmin() {
           {isEditing ? `Editando Plantilla: ${nombrePlantilla}` : 'Crear Nueva Plantilla Global'}
         </h1>
         <div className="flex gap-2">
-          {/* --- ¡¡¡CORRECCIÓN AQUÍ!!! --- */}
           <Link 
-            to="/super/plantillas" // Cambiado a /super/
+            to="/super/plantillas"
             className="bg-white text-gray-700 px-5 py-2 rounded-md border border-gray-300 hover:bg-gray-50"
           >
             Cancelar
