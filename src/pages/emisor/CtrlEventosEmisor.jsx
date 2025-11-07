@@ -3,7 +3,7 @@ import {
   MagnifyingGlassIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ArrowPathIcon // Importado para el botón Limpiar
+  ArrowPathIcon 
 } from '@heroicons/react/24/solid';
 
 const StatusBadge = ({ isActive }) => {
@@ -36,13 +36,14 @@ export default function CtrlEventosEmisor() {
   const [responsableFiltro, setResponsableFiltro] = useState('');
 
   const [eventos, setEventos] = useState([
-    { id: 1, nombre: 'Curso de React Avanzado', responsable: 'Juan Diego Palomino', fechaInicio: '2025-08-01', fechaFin: '2025-10-31', estado: true },
-    { id: 2, nombre: 'Taller de Figma para Devs.', responsable: 'Roy Silva Quesquen', fechaInicio: '2025-08-01', fechaFin: '2025-10-31', estado: false },
-    { id: 3, nombre: 'Workshop: Agile Fundamentals', responsable: 'Ana Gómez', fechaInicio: '2025-09-15', fechaFin: '2025-09-16', estado: true },
-    { id: 4, nombre: 'Seminario de Ciberseguridad', responsable: 'Carlos Ruiz', fechaInicio: '2025-10-05', fechaFin: '2025-10-05', estado: true },
-    { id: 5, nombre: 'Bootcamp Full Stack (Ed. Verano)', responsable: 'Juan Diego Palomino', fechaInicio: '2026-01-10', fechaFin: '2026-03-30', estado: false },
-    { id: 6, nombre: 'Charla: Introducción a IA', responsable: '', fechaInicio: '2025-11-20', fechaFin: '2025-11-20', estado: true },
-    { id: 7, nombre: 'Curso de Node.js Intermedio', responsable: 'Ana Gómez', fechaInicio: '2025-12-01', fechaFin: '2025-12-15', estado: true },
+    // --- DATOS ACTUALIZADOS CON DURACIÓN ---
+    { id: 1, nombre: 'Curso de React Avanzado', responsable: 'Juan Diego Palomino', fechaInicio: '2025-08-01', fechaFin: '2025-10-31', estado: true, duracion: '50h' },
+    { id: 2, nombre: 'Taller de Figma para Devs.', responsable: 'Roy Silva Quesquen', fechaInicio: '2025-08-01', fechaFin: '2025-10-31', estado: false, duracion: '12h' },
+    { id: 3, nombre: 'Workshop: Agile Fundamentals', responsable: 'Ana Gómez', fechaInicio: '2025-09-15', fechaFin: '2025-09-16', estado: true, duracion: '16h' },
+    { id: 4, nombre: 'Seminario de Ciberseguridad', responsable: 'Carlos Ruiz', fechaInicio: '2025-10-05', fechaFin: '2025-10-05', estado: true, duracion: '4h' },
+    { id: 5, nombre: 'Bootcamp Full Stack (Ed. Verano)', responsable: 'Juan Diego Palomino', fechaInicio: '2026-01-10', fechaFin: '2026-03-30', estado: false, duracion: '240h' },
+    { id: 6, nombre: 'Charla: Introducción a IA', responsable: '', fechaInicio: '2025-11-20', fechaFin: '2025-11-20', estado: true, duracion: '' },
+    { id: 7, nombre: 'Curso de Node.js Intermedio', responsable: 'Ana Gómez', fechaInicio: '2025-12-01', fechaFin: '2025-12-15', estado: true, duracion: '30h' },
   ]);
 
   const filteredItems = useMemo(() => {
@@ -106,11 +107,7 @@ export default function CtrlEventosEmisor() {
       <h1 className="text-3xl font-bold text-gray-800">Control de Eventos</h1>
 
       <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
-        {/* --- CAMBIO: Título H2 "Filtros" eliminado --- */}
-
-        {/* --- CAMBIO: Layout del grid y col-spans actualizados --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-x-6 gap-y-4 items-end">
-          
           <div className="col-span-1 md:col-span-1 lg:col-span-3">
             <label htmlFor="search-evento" className="block text-sm font-medium text-gray-700 mb-1">Evento</label>
             <div className="relative">
@@ -119,7 +116,6 @@ export default function CtrlEventosEmisor() {
                 className="form-input block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
           </div>
-
           <div className="col-span-1 md:col-span-1 lg:col-span-3">
             <label htmlFor="responsable" className="block text-sm font-medium text-gray-700 mb-1">Responsable</label>
             <input 
@@ -131,7 +127,6 @@ export default function CtrlEventosEmisor() {
               className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-2 px-3"
             />
           </div>
-
           <div className="col-span-1 md:col-span-1 lg:col-span-2">
             <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
             <select id="estado" value={estadoFiltro} onChange={handleFilterChange(setEstadoFiltro)}
@@ -141,22 +136,17 @@ export default function CtrlEventosEmisor() {
               <option>Inactivo</option>
             </select>
           </div>
-
           <div className="col-span-1 md:col-span-1 lg:col-span-2">
             <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
             <input type="date" id="start-date" value={fechaInicioFiltro} onChange={handleFilterChange(setFechaInicioFiltro)} 
               className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
           </div>
-
           <div className="col-span-1 md:col-span-1 lg:col-span-2">
             <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
             <input type="date" id="end-date" value={fechaFinFiltro} onChange={handleFilterChange(setFechaFinFiltro)} 
               className="form-input block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 py-1.5 px-3" />
           </div>
-          {/* --- CAMBIO: Botón Limpiar ELIMINADO de aquí --- */}
         </div>
-        
-        {/* --- CAMBIO: Botón Limpiar movido aquí, en su propio div --- */}
         <div className="flex justify-end pt-6 mt-6 border-t border-gray-200">
            <button 
               onClick={handleClearFilters} 
@@ -176,6 +166,7 @@ export default function CtrlEventosEmisor() {
                 <th scope="col" className="px-6 py-4">Nombre del Evento</th>
                 <th scope="col" className="px-6 py-4">Responsable</th>
                 <th scope="col" className="px-6 py-4">Periodo</th>
+                <th scope="col" className="px-6 py-4">Duración</th>
                 <th scope="col" className="px-6 py-4">Estado</th>
               </tr>
             </thead>
@@ -186,11 +177,12 @@ export default function CtrlEventosEmisor() {
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{evento.nombre}</td>
                     <td className="px-6 py-4">{evento.responsable || 'N/A'}</td>
                     <td className="px-6 py-4">{formatDateForDisplay(evento.fechaInicio)} - {formatDateForDisplay(evento.fechaFin)}</td>
+                    <td className="px-6 py-4">{evento.duracion || 'N/A'}</td> {/* <-- NUEVA CELDA */}
                     <td className="px-6 py-4"><StatusBadge isActive={evento.estado} /></td>
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="4" className="text-center py-10 px-6 text-gray-500">No se encontraron eventos con los filtros aplicados.</td></tr>
+                <tr><td colSpan="5" className="text-center py-10 px-6 text-gray-500">No se encontraron eventos con los filtros aplicados.</td></tr>
               )}
             </tbody>
           </table>

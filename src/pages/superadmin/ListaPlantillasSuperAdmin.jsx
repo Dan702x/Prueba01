@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiAddLine, RiFileTextLine, RiPencilLine, RiFileCopyLine, RiImageLine, RiPaletteLine, RiFontSize, RiCloseLine, RiImageAddLine } from 'react-icons/ri';
-import ModalBase from '../../components/common/ModalBase';
+import ModalBase from '../../components/common/ModalBase'; // Importamos el modal base
 
+// --- MOCK DATA ---
 const mockPlantillas = [ { id: 1, nombre: 'Plantilla Corporativa Global' }, { id: 2, nombre: 'Constancia Prácticas General' } ];
 const mockFondos = [ { id: 1, nombre: 'Olas Azules', url: 'https://placehold.co/150x100/00416A/E8E8E8?text=Olas' }, { id: 2, nombre: 'Abstracto Gris', url: 'https://placehold.co/150x100/BDBDBD/424242?text=Gris' }, { id: 3, nombre: 'Geo Dorado', url: 'https://placehold.co/150x100/D4AF37/222222?text=Dorado' } ];
 const mockTemas = [ { id: 1, nombre: 'Tema Corporativo', colors: ['#1e3a8a', '#1f2937'] }, { id: 2, nombre: 'Tema Clásico', colors: ['#1f2937', '#4b5563'] }, { id: 3, nombre: 'Tema Elegante', colors: ['#b45309', '#1f2937'] } ];
 const mockFuentes = [ { id: 1, nombre: 'Fuente Moderna', titleFont: "'Playfair Display', serif", baseFont: "'Lato', sans-serif" }, { id: 2, nombre: 'Fuente Clásica', titleFont: "'Merriweather', serif", baseFont: "'Merriweather', serif" } ];
 
+// --- PESTAÑAS Y TARJETAS (Componentes internos sin cambios) ---
 const TabButton = ({ label, icon, isActive, onClick }) => ( <button onClick={onClick} className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-4 transition-colors duration-200 ${isActive ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-800'}`}>{icon}{label}</button> );
+
+// --- FORMULARIOS PARA LOS MODALES ---
 
 const ModalAnadirFondo = ({ onClose }) => (
     <div className="p-6">
@@ -68,8 +72,10 @@ const ModalAnadirFuente = ({ onClose }) => (
 
 export default function ListaPlantillasSuperAdmin() {
   const [activeTab, setActiveTab] = useState('plantillas');
-  const [modalAbierto, setModalAbierto] = useState(null);
+  // --- ¡NUEVO ESTADO PARA CONTROLAR LOS MODALES! ---
+  const [modalAbierto, setModalAbierto] = useState(null); // null, 'fondos', 'temas', o 'fuentes'
 
+  // El botón ahora abre el modal correspondiente
   const mainAction = {
     plantillas: { label: 'Crear Plantilla Global', path: '/super/plantillas/crear' },
     fondos: { label: 'Añadir Nuevo Fondo', onClick: () => setModalAbierto('fondos') },
@@ -113,6 +119,7 @@ export default function ListaPlantillasSuperAdmin() {
         </div>
       </div>
       
+      {/* --- RENDERIZADO DE MODALES --- */}
       <ModalBase isOpen={modalAbierto === 'fondos'} onClose={handleCloseModal} maxWidth="md:max-w-lg">
           <ModalAnadirFondo onClose={handleCloseModal} />
       </ModalBase>

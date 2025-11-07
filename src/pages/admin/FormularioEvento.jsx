@@ -4,11 +4,10 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
   const [nombre, setNombre] = useState('');
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
-  // --- CAMBIO: Separar responsable en nombre y apellido ---
+  const [duracion, setDuracion] = useState('');
   const [responsableNombre, setResponsableNombre] = useState('');
   const [responsableApellido, setResponsableApellido] = useState('');
 
-  // --- CAMBIO: Estado para el mensaje de error ---
   const [error, setError] = useState('');
 
   const esModoEdicion = Boolean(evento);
@@ -19,6 +18,7 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
       setNombre(evento.nombre || '');
       setFechaInicio(evento.fechaInicio || '');
       setFechaFin(evento.fechaFin || '');
+      setDuracion(evento.duracion || '');
       
       const nombreCompleto = evento.responsable || '';
       const primerEspacio = nombreCompleto.indexOf(' '); 
@@ -32,30 +32,29 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
       }
     } else {
       setNombre(''); setFechaInicio(''); setFechaFin('');
+      setDuracion('');
       setResponsableNombre(''); setResponsableApellido('');
     }
   }, [evento, esModoEdicion]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError(''); // Limpiar error previo
+    setError(''); 
 
-    // --- CAMBIO: Validación de Nombres/Apellidos ---
     const nombreLleno = responsableNombre.trim() !== '';
     const apellidoLleno = responsableApellido.trim() !== '';
 
-    // Si uno está lleno pero el otro no, mostrar error
     if ((nombreLleno && !apellidoLleno) || (!nombreLleno && apellidoLleno)) {
       setError('Debe completar tanto nombres como apellidos, o dejar ambos campos vacíos.');
-      return; // Detener envío
+      return; 
     }
-    // --- FIN CAMBIO ---
 
     const responsableUnido = `${responsableNombre} ${responsableApellido}`.trim();
     const datosFormulario = { 
       nombre, 
       fechaInicio, 
       fechaFin, 
+      duracion,
       responsable: responsableUnido
     };
     
@@ -75,6 +74,7 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
             <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">Nombre del Evento</label>
             <input type="text" id="nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} className={`${inputBaseClasses} ${inputPaddingClasses}`} required />
           </div>
+          
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label htmlFor="fechaInicio" className="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
@@ -85,6 +85,20 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
               <input type="date" id="fechaFin" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} className={`${inputBaseClasses} ${inputPaddingClasses}`} required />
             </div>
           </div>
+
+          {/* --- CAMPO DURACIÓN AÑADIDO --- */}
+          <div>
+            <label htmlFor="duracion" className="block text-sm font-medium text-gray-700 mb-1">Duración (Opcional)</label>
+            <input 
+              type="text" 
+              id="duracion" 
+              value={duracion} 
+              onChange={(e) => setDuracion(e.target.value)} 
+              className={`${inputBaseClasses} ${inputPaddingClasses}`} 
+              placeholder="Ej: 50h"
+            />
+          </div>
+          {/* --- FIN CAMPO DURACIÓN --- */}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -111,13 +125,11 @@ export default function FormularioEvento({ evento, onClose, onSave }) {
             </div>
           </div>
 
-          {/* --- CAMBIO: Mostrar mensaje de error o nota --- */}
           {error ? (
             <p className="text-xs text-red-600 -mt-3 text-center font-medium">{error}</p>
           ) : (
             <p className="text-xs text-gray-500 -mt-3">Los campos de responsable son opcionales.</p>
           )}
-          {/* --- FIN DEL CAMBIO --- */}
 
         </div>
         <div className="flex justify-end gap-4 mt-8">
